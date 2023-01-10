@@ -1,0 +1,20 @@
+{
+  "name": "rollup-plugin-remoov",
+  "version": "0.0.1",
+  "description": "System for removing JavaScript code which a real-world app never uses",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richplastow/rollup-plugin-remoov.git"
+  },
+  "keywords": [],
+  "author": "Rich Plastow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/richplastow/rollup-plugin-remoov/issues"
+  },
+  "homepage": "https://github.com/richplastow/rollup-plugin-remoov#readme"
+}
