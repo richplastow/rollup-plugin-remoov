@@ -31,12 +31,14 @@ W.scan = W.scan || function weenifyScan() {
         for (let i=0; i<W.extendDelete[pathHash].length; i++) {
             const didBegin = W.begin[pathHash].has(i);
             const didEnd = W.end[pathHash].has(i);
-            if (!didBegin && !didEnd)
+            if (!didBegin && !didEnd) {
                 W.remove[pathHash].push(i);
-            else if (didBegin && didEnd)
+            } else if (didBegin && didEnd) {
                 W.ignore[pathHash].push(i);
-            else
+            } else {
                 W.errors.push(`Mismatch ${pathHash} ${i}`);
+                W.ignore[pathHash].push(i);
+            }
         }
     }
     let ignoreLists = [];
@@ -117,12 +119,14 @@ W.scan = W.scan || function weenifyScan() {
         for (let i=0; i<W.extendDelete[pathHash].length; i++) {
             const didBegin = W.begin[pathHash].has(i);
             const didEnd = W.end[pathHash].has(i);
-            if (!didBegin && !didEnd)
+            if (!didBegin && !didEnd) {
                 W.remove[pathHash].push(i);
-            else if (didBegin && didEnd)
+            } else if (didBegin && didEnd) {
                 W.ignore[pathHash].push(i);
-            else
+            } else {
                 W.errors.push(`Mismatch ${pathHash} ${i}`);
+                W.ignore[pathHash].push(i);
+            }
         }
     }
     let ignoreLists = [];
@@ -206,12 +210,14 @@ W.scan = W.scan || function weenifyScan() {
         for (let i=0; i<W.extendDelete[pathHash].length; i++) {
             const didBegin = W.begin[pathHash].has(i);
             const didEnd = W.end[pathHash].has(i);
-            if (!didBegin && !didEnd)
+            if (!didBegin && !didEnd) {
                 W.remove[pathHash].push(i);
-            else if (didBegin && didEnd)
+            } else if (didBegin && didEnd) {
                 W.ignore[pathHash].push(i);
-            else
+            } else {
                 W.errors.push(`Mismatch ${pathHash} ${i}`);
+                W.ignore[pathHash].push(i);
+            }
         }
     }
     let ignoreLists = [];
@@ -290,12 +296,14 @@ W.scan = W.scan || function weenifyScan() {
         for (let i=0; i<W.extendDelete[pathHash].length; i++) {
             const didBegin = W.begin[pathHash].has(i);
             const didEnd = W.end[pathHash].has(i);
-            if (!didBegin && !didEnd)
+            if (!didBegin && !didEnd) {
                 W.remove[pathHash].push(i);
-            else if (didBegin && didEnd)
+            } else if (didBegin && didEnd) {
                 W.ignore[pathHash].push(i);
-            else
+            } else {
                 W.errors.push(`Mismatch ${pathHash} ${i}`);
+                W.ignore[pathHash].push(i);
+            }
         }
     }
     let ignoreLists = [];

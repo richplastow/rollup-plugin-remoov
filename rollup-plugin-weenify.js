@@ -49,7 +49,7 @@ export default function removeUnused(options) {
                         console.error(`Missing \`${from}\``);
                         // throw Error(`Missing \`${from}\``);
                     } else {
-                        console.error(`Missing \`${to}\``);
+                        console.error(`Missing \`${to}\` @TODO get 04-ifs-nested-basic.js to work`);
                         // throw Error(`Missing \`${to}\``);
                     }
                 }
@@ -85,7 +85,7 @@ export default function removeUnused(options) {
                 }
             }
 
-            // console.log(src);
+            console.log(src);
             return src;
         }
     }

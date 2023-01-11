@@ -7,18 +7,18 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.pathHashes = W.pathHashes || [];
-W.pathHashes.push('98ojcf');
+W.pathHashes.push('3l5xms');
 W.begin = W.begin || {};
-W.begin['98ojcf'] = new Set();
+W.begin['3l5xms'] = new Set();
 W.end = W.end || {};
-W.end['98ojcf'] = new Set();
+W.end['3l5xms'] = new Set();
 W.errors = W.errors || [];
 W.ignore = W.ignore || {};
-W.ignore['98ojcf'] = [];
+W.ignore['3l5xms'] = [];
 W.remove = W.remove || {};
-W.remove['98ojcf'] = [];
+W.remove['3l5xms'] = [];
 W.extendDelete = W.extendDelete || {};
-W.extendDelete['98ojcf'] = [ 0,0 ];
+W.extendDelete['3l5xms'] = [ 30,34,0 ];
 W.spy = W.spy || function weenifySpy(id) {
     const [ place, pathHash, index, _extendDelete ] = id.split('-');
     if (place === 'B')
@@ -70,16 +70,20 @@ if (! W.didPrepScanCall) {
 }(); // end iife
 // END_WEENIFY_BOILERPLATE
 
-function basicExample(redBlue) {
+function ifsNestedBasic(redBlue, greenYellow) {
   if (redBlue === 'RED') {
-    WEENIFY.spy('B-98ojcf-0-0');
-    console.log('1st IfStatement consequent block - will be used.');
-    WEENIFY.spy('E-98ojcf-0-0');
-  }
-  if (redBlue === 'BLUE') {
-    WEENIFY.spy('B-98ojcf-1-0');
-    console.log('2nd IfStatement consequent NOT a block - is never actually used.');
-    WEENIFY.spy('E-98ojcf-1-0');
+    WEENIFY.spy('B-3l5xms-2-0');
+    console.log('1st IfStatement consequent outer block - will be used.');
+    if (greenYellow === 'GREEN') {
+      WEENIFY.spy('B-3l5xms-0-30');
+      WEENIFY.spy('E-3l5xms-0-30');
+      return 'greenYellow is GREEN';
+    } else {
+      WEENIFY.spy('B-3l5xms-1-34');
+      WEENIFY.spy('E-3l5xms-1-34');
+      return 'greenYellow is not GREEN';
+    }
   }
 }
-basicExample('RED');
+
+ifsNestedBasic('RED', 'GREEN');
