@@ -13,14 +13,19 @@
   "keywords": [
     "rollup",
     "plugin",
-    "compress"
+    "compress",
     "minify",
-    "coverage",
+    "coverage"
   ],
   "author": "Rich Plastow",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/richplastow/rollup-plugin-weenify/issues"
   },
-  "homepage": "https://github.com/richplastow/rollup-plugin-weenify#readme"
+  "homepage": "https://github.com/richplastow/rollup-plugin-weenify#readme",
+  "devDependencies": {
+    "acorn-walk": "8.2.0",
+    "astring": "1.8.4",
+    "rollup": "3.9.1"
+  }
 }
