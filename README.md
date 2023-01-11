@@ -1,6 +1,6 @@
-# rollup-plugin-remoov
+# rollup-plugin-weenify
 
-## System for removing JavaScript code which a real-world app never uses
+## Rollup plugins for removing JavaScript code which a real-world app never uses
 
 ---
 

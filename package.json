@@ -1,20 +1,26 @@
 {
-  "name": "rollup-plugin-remoov",
+  "name": "rollup-plugin-weenify",
   "version": "0.0.1",
-  "description": "System for removing JavaScript code which a real-world app never uses",
+  "description": "Rollup plugins for removing JavaScript code which a real-world app never uses",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/richplastow/rollup-plugin-remoov.git"
+    "url": "git+https://github.com/richplastow/rollup-plugin-weenify.git"
   },
-  "keywords": [],
+  "keywords": [
+    "rollup",
+    "plugin",
+    "compress"
+    "minify",
+    "coverage",
+  ],
   "author": "Rich Plastow",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/richplastow/rollup-plugin-remoov/issues"
+    "url": "https://github.com/richplastow/rollup-plugin-weenify/issues"
   },
-  "homepage": "https://github.com/richplastow/rollup-plugin-remoov#readme"
+  "homepage": "https://github.com/richplastow/rollup-plugin-weenify#readme"
 }
