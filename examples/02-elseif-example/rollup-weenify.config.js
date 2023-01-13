@@ -3,14 +3,8 @@
 import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
-    extendDelete: {
-        '6bcklh': [ 0,0,0,0,0,0 ]
-    },
-    ignore: {
-        '6bcklh': [ 2,4 ]
-    },
-    remove: {
-        '6bcklh': [ 0,1,3,5 ]
+    spyResults: {
+        '6bcklh': [ 1,1,0,1,0,1 ]
     },
 };
 

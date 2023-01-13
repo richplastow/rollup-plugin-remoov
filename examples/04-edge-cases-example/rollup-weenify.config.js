@@ -3,14 +3,8 @@
 import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
-    extendDelete: {
-        '3l5xms': [ 30,34,0 ]
-    },
-    ignore: {
-        '3l5xms': [ 0,2 ]
-    },
-    remove: {
-        '3l5xms': [ 1 ]
+    spyResults: {
+        '3l5xms': [ 0,1,0 ]
     },
 };
 

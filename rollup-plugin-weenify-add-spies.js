@@ -1,66 +1,57 @@
 import { simple as simpleWalk } from 'acorn-walk';
 import { generate } from 'astring';
 
-export default function addScanners(options = {}) {
+export default function addSpies(options = {}) {
     return {
-        name: 'addScanners',
+        name: 'addSpies',
         transform(source, path) {
             const ast = this.parse(source);
             const pathHash = hash(path);
-            let localTally = 0;
-            const extendDeleteList = [];
+            let currentSpyIndex = -1;
 
             simpleWalk(ast, {
                 IfStatement(node) {
-                    // @TODO deal with these...
-                    if (node.consequent.type === 'ContinueStatement') return;
-                    if (node.consequent.type === 'BreakStatement') return;
-                    if (node.consequent.type === 'ReturnStatement') return;
-                    if (node.consequent.type === 'ThrowStatement') return;
+                    // Create an identifier for this `WEENIFY.spy()` call, unique
+                    // within the current `path`.
+                    currentSpyIndex += 1;
 
-                    // An ExpressionStatement is `if (x) foo()`.
-                    // A BlockStatement is `if (x) { foo() }`.
-                    // Anything else cannot be handled.
-                    if (node.consequent.type !== 'ExpressionStatement'
-                     && node.consequent.type !== 'BlockStatement'
-                    ) throw Error(`consequent.type is '${node.consequent.type
-                        }' not 'BlockStatement' or 'ExpressionStatement'`);
-
-                    // An ExpressionStatement must be wrapped in a block, so that
-                    // `WEENIFY.spy()` can be inserted.
-                    if (node.consequent.type === 'ExpressionStatement')
+                    // A 'statement' Node must be wrapped in a block, so that
+                    // `WEENIFY.spy()` can be inserted at the top of that block.
+                    // - BlockStatement:      if (a) { ... }
+                    // - BreakStatement:      while (a) if (b) break
+                    // - ContinueStatement:   while (a) if (b) continue
+                    // - ExpressionStatement: if (a) b()
+                    // - ReturnStatement:     if (a) return
+                    // - ThrowStatement:      if (a) throw b
+                    if (node.consequent.type !== 'BlockStatement')
                         node.consequent = createBlockStatementNode(node.consequent);
 
-                    // At this point, `node.consequent.type` must be 'BlockStatement'.
-                    // By default, the `WEENIFY.spy('E-...')` call will be placed
-                    // at the end of the block, and will only be passed one argument.
-                    let endInsertIndex = node.consequent.body.length;
-                    let extendDelete = 0;
-
-                    // Search the top-level of the block for a `return` statement, etc.
-                    for (const [subIndex, subNode] of node.consequent.body.entries()) {
-                        // If found, the `WEENIFY.spy('E-...')` call will be placed
-                        // just before the `return` statement.
-                        if (
-                            subNode.type === 'ContinueStatement'
-                         || subNode.type === 'BreakStatement'
-                         || subNode.type === 'ReturnStatement'
-                         || subNode.type === 'ThrowStatement'
-                        ) {
-                            endInsertIndex = subIndex;
-                            extendDelete = generate(subNode).length;
-                            break;
+                    // At this point, `node.consequent` must be a BlockStatement.
+                    // Insert the `WEENIFY.spy()` call at the top of the block.
+                    node.consequent.body.unshift({
+                        type: 'ExpressionStatement',
+                        start: 0,
+                        end: 0,
+                        expression: {
+                            type: 'CallExpression',
+                            start: 0,
+                            end: 0,
+                            callee: {
+                                type: 'Identifier',
+                                start: 0,
+                                end: 0,
+                                name: 'WEENIFY.spy'
+                            },
+                            arguments: [{
+                                type: 'Literal',
+                                start: 0,
+                                end: 0,
+                                value: `${pathHash}-${currentSpyIndex}`,
+                                raw: `'${pathHash}-${currentSpyIndex}'`,
+                            }],
+                            optional: false
                         }
-                    }
-
-                    // At this point, `node.consequent.type` must be a 'BlockStatement'.
-                    insertSpies(node.consequent, pathHash, localTally, endInsertIndex, extendDelete);
-
-                    // Xx.
-                    extendDeleteList.push(extendDelete);
-
-                    // Ready for the next `WEENIFY.spy()` pair.
-                    localTally += 1;
+                    });
 
                     // If there is no `else` case, go to the next Node.
                     if (! node.alternate) return;
@@ -69,39 +60,46 @@ export default function addScanners(options = {}) {
                     if (node.alternate.type === 'IfStatement') return;
 
                     // Repeat the above for the alternate.
-                    if (node.alternate.type !== 'ExpressionStatement'
-                     && node.alternate.type !== 'BlockStatement'
-                    ) throw Error(`alternate.type is '${node.alternate.type
-                        }' not 'BlockStatement' or 'ExpressionStatement'`);
-                    if (node.alternate.type === 'ExpressionStatement')
+                    currentSpyIndex += 1;
+                    if (node.alternate.type !== 'BlockStatement')
                         node.alternate = createBlockStatementNode(node.alternate);
-                    endInsertIndex = node.alternate.body.length;
-                    extendDelete = 0;
-                    for (const [subIndex, subNode] of node.alternate.body.entries()) {
-                        if (
-                            subNode.type === 'ContinueStatement'
-                         || subNode.type === 'BreakStatement'
-                         || subNode.type === 'ReturnStatement'
-                         || subNode.type === 'ThrowStatement'
-                        ) {
-                            endInsertIndex = subIndex;
-                            extendDelete = generate(subNode).length;
-                            break;
+                    node.alternate.body.unshift({
+                        type: 'ExpressionStatement',
+                        start: 0,
+                        end: 0,
+                        expression: {
+                            type: 'CallExpression',
+                            start: 0,
+                            end: 0,
+                            callee: {
+                                type: 'Identifier',
+                                start: 0,
+                                end: 0,
+                                name: 'WEENIFY.spy'
+                            },
+                            arguments: [{
+                                type: 'Literal',
+                                start: 0,
+                                end: 0,
+                                value: `${pathHash}-${currentSpyIndex}`,
+                                raw: `'${pathHash}-${currentSpyIndex}'`,
+                            }],
+                            optional: false
                         }
-                    }
-                    insertSpies(node.alternate, pathHash, localTally, endInsertIndex, extendDelete);
-                    extendDeleteList.push(extendDelete);
-                    localTally += 1;
-
+                    });
                 },
             })
 
             // console.log(JSON.stringify(ast,null,2));
             let regenerated = generate(ast);
 
-            // If any WEENIFY.spy() pairs were added, insert the standard
-            // Weenify boilerplate to the top of the source code.
-            if (localTally > 0) {
+            // If any WEENIFY.spy() calls were added, insert the standard
+            // Weenify boilerplate to the top of the file. Note that Rollup may
+            // concatenate many files, so this boilerplate (with different values
+            // for pathHash and numSpies) may be appear many times in a
+            // concatenated file.
+            // Later, rollup-plugin-weenify.js will remove all the boilerplate.
+            if (currentSpyIndex >= 0) {
                 regenerated = [
                     "// BEGIN_WEENIFY_BOILERPLATE",
                     "typeof window === 'object'",
@@ -111,60 +109,32 @@ export default function addScanners(options = {}) {
                     "        : (() => { throw Error('Weenify: No `window` or `global`') })();",
                     "!function(){ // begin iife",
                     "const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;",
-                    "W.pathHashes = W.pathHashes || [];",
-                    `W.pathHashes.push('${pathHash}');`,
-                    "W.begin = W.begin || {};",
-                    `W.begin['${pathHash}'] = new Set();`,
-                    "W.end = W.end || {};",
-                    `W.end['${pathHash}'] = new Set();`,
-                    "W.errors = W.errors || [];",
-                    "W.ignore = W.ignore || {};",
-                    `W.ignore['${pathHash}'] = [];`,
-                    "W.remove = W.remove || {};",
-                    `W.remove['${pathHash}'] = [];`,
-                    "W.extendDelete = W.extendDelete || {};",
-                    `W.extendDelete['${pathHash}'] = [ ${extendDeleteList.join()} ];`,
+                    "W.numSpies = W.numSpies || {};",
+                    `W.numSpies['${pathHash}'] = ${currentSpyIndex + 1};`,
+                    "W.spyResults = W.spyResults || {};",
+                    `W.spyResults['${pathHash}'] = [];`,
+                    "W.spyCalls = W.spyCalls || {};",
+                    `W.spyCalls['${pathHash}'] = new Set();`,
                     "W.spy = W.spy || function weenifySpy(id) {",
-                    "    const [ place, pathHash, index, _extendDelete ] = id.split('-');",
-                    "    if (place === 'B')",
-                    "        W.begin[pathHash].add(+index);",
-                    "    else // place === 'E'",
-                    "        W.end[pathHash].add(+index);",
+                    "    const [ pathHash, index ] = id.split('-');",
+                    "        W.spyCalls[pathHash].add(+index);",
                     "}",
                     "W.scan = W.scan || function weenifyScan() {",
-                    "    for (const pathHash of W.pathHashes) {",
-                    // `        console.log(W.pathHashes, W.remove, W.extendDelete[pathHash].length);`,
-                    `        for (let i=0; i<W.extendDelete[pathHash].length; i++) {`,
-                    `            const didBegin = W.begin[pathHash].has(i);`,
-                    `            const didEnd = W.end[pathHash].has(i);`,
-                    "            if (!didBegin && !didEnd) {",
-                    `                W.remove[pathHash].push(i);`,
-                    "            } else if (didBegin && didEnd) {",
-                    `                W.ignore[pathHash].push(i);`,
-                    "            } else {",
-                    "                W.errors.push(`Mismatch ${pathHash} ${i}`);",
-                    "                W.ignore[pathHash].push(i);", // @TODO recognise 04-ifs-nested-basic.js and similar, and then remove this line
-                    "            }",
+                    "    for (const pathHash in W.spyCalls) {",
+                    "        for (let i=0; i<W.numSpies[pathHash]; i++) {",
+                    "            W.spyResults[pathHash].push(",
+                    "                W.spyCalls[pathHash].has(i) ? 0 : 1",
+                    "            )",
                     "        }",
                     "    }",
-                    "    let ignoreLists = [];",
-                    "    let removeLists = [];",
-                    "    let extdltLists = [];",
-                    "    for (const pH of W.pathHashes) {",
-                    "        ignoreLists.push(`        '${pH}': [ ${W.ignore[pH].join()} ]`);",
-                    "        removeLists.push(`        '${pH}': [ ${W.remove[pH].join()} ]`);",
-                    "        extdltLists.push(`        '${pH}': [ ${W.extendDelete[pH].join()} ]`);",
+                    "    let spyResultsLists = [];",
+                    "    for (const pathHash in W.spyCalls) {",
+                    "        spyResultsLists.push(`        '${pathHash}': [ ${W.spyResults[pathHash].join()} ]`);",
                     "    }",
                     "    console.log(",
                     "        'const weenifyOptions = {\\n' +",
-                    "        '    extendDelete: {\\n' +",
-                    "        extdltLists.join(',\\n') +",
-                    "        '\\n    },\\n' +",
-                    "        '    ignore: {\\n' +",
-                    "        ignoreLists.join(',\\n') +",
-                    "        '\\n    },\\n' +",
-                    "        '    remove: {\\n' +",
-                    "        removeLists.join(',\\n') +",
+                    "        '    spyResults: {\\n' +",
+                    "        spyResultsLists.join(',\\n') +",
                     "        '\\n    },\\n' +",
                     "        '};'",
                     "    );",
@@ -172,7 +142,7 @@ export default function addScanners(options = {}) {
                     ! options.callScan ? '' :
                         "if (! W.didPrepScanCall) {\n" +
                         `    setTimeout(() => W.scan(), ${options.callScan});\n` +
-                        `    W.didPrepScanCall = true;\n` +
+                        "    W.didPrepScanCall = true;\n" +
                         "}",
                     "}(); // end iife",
                     "// END_WEENIFY_BOILERPLATE",
@@ -187,17 +157,17 @@ export default function addScanners(options = {}) {
     }
 }
 
-function insertSpies(blockNode, path, localTally, endInsertIndex, extendDelete) {
+function insertSpies(blockNode, path, currentSpyIndex, endInsertIndex, extendDelete) {
     blockNode.body.unshift(createSpyFunction(
         'B', // before
         path,
-        localTally,
+        currentSpyIndex,
         extendDelete,
     ));
     blockNode.body.splice(endInsertIndex + 1, 0, createSpyFunction(
         'E', // end
         path,
-        localTally,
+        currentSpyIndex,
         extendDelete,
     ));
 }

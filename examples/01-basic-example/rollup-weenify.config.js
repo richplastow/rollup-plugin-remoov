@@ -3,14 +3,8 @@
 import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
-    extendDelete: {
-        '98ojcf': [ 0,0 ]
-    },
-    ignore: {
-        '98ojcf': [ 0 ]
-    },
-    remove: {
-        '98ojcf': [ 1 ]
+    spyResults: {
+        '98ojcf': [ 0,1 ]
     },
 };
 

@@ -6,59 +6,32 @@ typeof window === 'object'
         : (() => { throw Error('Weenify: No `window` or `global`') })();
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
-W.pathHashes = W.pathHashes || [];
-W.pathHashes.push('6bcklh');
-W.begin = W.begin || {};
-W.begin['6bcklh'] = new Set();
-W.end = W.end || {};
-W.end['6bcklh'] = new Set();
-W.errors = W.errors || [];
-W.ignore = W.ignore || {};
-W.ignore['6bcklh'] = [];
-W.remove = W.remove || {};
-W.remove['6bcklh'] = [];
-W.extendDelete = W.extendDelete || {};
-W.extendDelete['6bcklh'] = [ 0,0,0,0,0,0 ];
+W.numSpies = W.numSpies || {};
+W.numSpies['6bcklh'] = 6;
+W.spyResults = W.spyResults || {};
+W.spyResults['6bcklh'] = [];
+W.spyCalls = W.spyCalls || {};
+W.spyCalls['6bcklh'] = new Set();
 W.spy = W.spy || function weenifySpy(id) {
-    const [ place, pathHash, index, _extendDelete ] = id.split('-');
-    if (place === 'B')
-        W.begin[pathHash].add(+index);
-    else // place === 'E'
-        W.end[pathHash].add(+index);
+    const [ pathHash, index ] = id.split('-');
+        W.spyCalls[pathHash].add(+index);
 };
 W.scan = W.scan || function weenifyScan() {
-    for (const pathHash of W.pathHashes) {
-        for (let i=0; i<W.extendDelete[pathHash].length; i++) {
-            const didBegin = W.begin[pathHash].has(i);
-            const didEnd = W.end[pathHash].has(i);
-            if (!didBegin && !didEnd) {
-                W.remove[pathHash].push(i);
-            } else if (didBegin && didEnd) {
-                W.ignore[pathHash].push(i);
-            } else {
-                W.errors.push(`Mismatch ${pathHash} ${i}`);
-                W.ignore[pathHash].push(i);
-            }
+    for (const pathHash in W.spyCalls) {
+        for (let i=0; i<W.numSpies[pathHash]; i++) {
+            W.spyResults[pathHash].push(
+                W.spyCalls[pathHash].has(i) ? 0 : 1
+            );
         }
     }
-    let ignoreLists = [];
-    let removeLists = [];
-    let extdltLists = [];
-    for (const pH of W.pathHashes) {
-        ignoreLists.push(`        '${pH}': [ ${W.ignore[pH].join()} ]`);
-        removeLists.push(`        '${pH}': [ ${W.remove[pH].join()} ]`);
-        extdltLists.push(`        '${pH}': [ ${W.extendDelete[pH].join()} ]`);
+    let spyResultsLists = [];
+    for (const pathHash in W.spyCalls) {
+        spyResultsLists.push(`        '${pathHash}': [ ${W.spyResults[pathHash].join()} ]`);
     }
     console.log(
         'const weenifyOptions = {\n' +
-        '    extendDelete: {\n' +
-        extdltLists.join(',\n') +
-        '\n    },\n' +
-        '    ignore: {\n' +
-        ignoreLists.join(',\n') +
-        '\n    },\n' +
-        '    remove: {\n' +
-        removeLists.join(',\n') +
+        '    spyResults: {\n' +
+        spyResultsLists.join(',\n') +
         '\n    },\n' +
         '};'
     );
@@ -72,32 +45,26 @@ if (! W.didPrepScanCall) {
 
 function ifElseIfElseWithBlocks(redBlue) {
   if (redBlue === 'RED') {
-    WEENIFY.spy('B-6bcklh-2-0');
+    WEENIFY.spy('6bcklh-2');
     console.log('1st IfStatement consequent block - will be used.');
-    WEENIFY.spy('E-6bcklh-2-0');
   } else if (redBlue === 'YELLOW') {
-    WEENIFY.spy('B-6bcklh-0-0');
+    WEENIFY.spy('6bcklh-0');
     console.log('1st IfStatement middle block - is never actually used.');
-    WEENIFY.spy('E-6bcklh-0-0');
   } else {
-    WEENIFY.spy('B-6bcklh-1-0');
+    WEENIFY.spy('6bcklh-1');
     console.log('1st IfStatement alternate block - also never used.');
-    WEENIFY.spy('E-6bcklh-1-0');
   }
 }
 function ifElseIfElseWithoutBlocks(redBlue) {
   if (redBlue === 'BLUE') {
-    WEENIFY.spy('B-6bcklh-5-0');
+    WEENIFY.spy('6bcklh-5');
     console.log('2nd IfStatement consequent NOT a block - is never actually used.');
-    WEENIFY.spy('E-6bcklh-5-0');
   } else if (redBlue === 'YELLOW') {
-    WEENIFY.spy('B-6bcklh-3-0');
+    WEENIFY.spy('6bcklh-3');
     console.log('2nd IfStatement middle NOT a block - also never used.');
-    WEENIFY.spy('E-6bcklh-3-0');
   } else {
-    WEENIFY.spy('B-6bcklh-4-0');
+    WEENIFY.spy('6bcklh-4');
     console.log('2nd IfStatement alternate NOT a block - will be used.');
-    WEENIFY.spy('E-6bcklh-4-0');
   }
 }
 
