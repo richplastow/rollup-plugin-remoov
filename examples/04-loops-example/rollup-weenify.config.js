@@ -4,6 +4,9 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
+        '8tdzor': [ 0,0,1,1 ],
+        '4s0u2m': [ 0,0,1,1 ],
+        '4ov6eo': [ 0,0,1,1 ],
         'clx9pq': [ 0,0,1,1 ]
     },
 };

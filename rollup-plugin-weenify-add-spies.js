@@ -43,7 +43,14 @@ export default function addSpies(options = {}) {
                     insertSpyCall(node.alternate.body, pathHash, currentSpyIndex);
                 },
 
-                WhileStatement(node) {
+                ForStatement(node) {
+                    currentSpyIndex += 1;
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                },
+
+                ForInStatement(node) {
                     // console.log(JSON.stringify(node,null,2));
 
                     currentSpyIndex += 1;
@@ -52,6 +59,20 @@ export default function addSpies(options = {}) {
 
                     // At this point, `node` must be a BlockStatement.
                     // Insert the `WEENIFY.spy()` call at the top of the block.
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                },
+
+                ForOfStatement(node) {
+                    currentSpyIndex += 1;
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                },
+
+                WhileStatement(node) {
+                    currentSpyIndex += 1;
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
                     insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
             })
