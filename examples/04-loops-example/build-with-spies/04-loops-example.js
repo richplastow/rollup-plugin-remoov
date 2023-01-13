@@ -7,11 +7,11 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['3l5xms'] = 3;
+W.numSpies['clx9pq'] = 4;
 W.spyResults = W.spyResults || {};
-W.spyResults['3l5xms'] = [];
+W.spyResults['clx9pq'] = [];
 W.spyCalls = W.spyCalls || {};
-W.spyCalls['3l5xms'] = new Set();
+W.spyCalls['clx9pq'] = new Set();
 W.spy = W.spy || function weenifySpy(id) {
     const [ pathHash, index ] = id.split('-');
         W.spyCalls[pathHash].add(+index);
@@ -43,18 +43,25 @@ if (! W.didPrepScanCall) {
 }(); // end iife
 // END_WEENIFY_BOILERPLATE
 
-function ifsNestedBasic(redBlue, greenYellow) {
-  if (redBlue === 'RED') {
-    WEENIFY.spy('3l5xms-2');
-    console.log('1st IfStatement consequent outer block - will be used.');
-    if (greenYellow === 'GREEN') {
-      WEENIFY.spy('3l5xms-0');
-      return 'greenYellow is GREEN';
-    } else {
-      WEENIFY.spy('3l5xms-1');
-      return 'greenYellow is not GREEN';
-    }
+function loopsWhile(a, b) {
+  while (a) {
+    WEENIFY.spy('clx9pq-0');
+    console.log('First and second while blocks will both be used.');
+    break;
+  }
+  while (a) {
+    WEENIFY.spy('clx9pq-1');
+    break;
+  }
+  while (b) {
+    WEENIFY.spy('clx9pq-2');
+    console.log('Third and fourth while blocks are never actually used.');
+    break;
+  }
+  while (b) {
+    WEENIFY.spy('clx9pq-3');
+    break;
   }
 }
 
-ifsNestedBasic('RED', 'GREEN');
+loopsWhile(true, false);

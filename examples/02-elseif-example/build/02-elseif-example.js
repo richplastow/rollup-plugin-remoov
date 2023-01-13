@@ -13,3 +13,6 @@ function basicExample(redBlue) {
   ifElseIfElseWithoutBlocks(redBlue);
 }
 basicExample('RED');
+
+
+// Weenify passes needed: 1

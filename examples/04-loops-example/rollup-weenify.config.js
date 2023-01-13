@@ -4,17 +4,17 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        '3l5xms': [ 0,1,0 ]
+        'clx9pq': [ 0,0,1,1 ]
     },
 };
 
-const PATH = 'examples/04-edge-cases-example/';
+const PATH = 'examples/04-loops-example/';
 
 export default {
-    input: `${PATH}build-with-spies/04-edge-cases-example.js`,
+    input: `${PATH}build-with-spies/04-loops-example.js`,
     output: {
         format: 'es',
-        file: `${PATH}build/04-edge-cases-example.js`,
+        file: `${PATH}build/04-loops-example.js`,
         plugins: [],
     },
     plugins: [

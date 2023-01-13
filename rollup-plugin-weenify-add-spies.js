@@ -28,30 +28,7 @@ export default function addSpies(options = {}) {
 
                     // At this point, `node.consequent` must be a BlockStatement.
                     // Insert the `WEENIFY.spy()` call at the top of the block.
-                    node.consequent.body.unshift({
-                        type: 'ExpressionStatement',
-                        start: 0,
-                        end: 0,
-                        expression: {
-                            type: 'CallExpression',
-                            start: 0,
-                            end: 0,
-                            callee: {
-                                type: 'Identifier',
-                                start: 0,
-                                end: 0,
-                                name: 'WEENIFY.spy'
-                            },
-                            arguments: [{
-                                type: 'Literal',
-                                start: 0,
-                                end: 0,
-                                value: `${pathHash}-${currentSpyIndex}`,
-                                raw: `'${pathHash}-${currentSpyIndex}'`,
-                            }],
-                            optional: false
-                        }
-                    });
+                    insertSpyCall(node.consequent.body, pathHash, currentSpyIndex);
 
                     // If there is no `else` case, go to the next Node.
                     if (! node.alternate) return;
@@ -63,30 +40,19 @@ export default function addSpies(options = {}) {
                     currentSpyIndex += 1;
                     if (node.alternate.type !== 'BlockStatement')
                         node.alternate = createBlockStatementNode(node.alternate);
-                    node.alternate.body.unshift({
-                        type: 'ExpressionStatement',
-                        start: 0,
-                        end: 0,
-                        expression: {
-                            type: 'CallExpression',
-                            start: 0,
-                            end: 0,
-                            callee: {
-                                type: 'Identifier',
-                                start: 0,
-                                end: 0,
-                                name: 'WEENIFY.spy'
-                            },
-                            arguments: [{
-                                type: 'Literal',
-                                start: 0,
-                                end: 0,
-                                value: `${pathHash}-${currentSpyIndex}`,
-                                raw: `'${pathHash}-${currentSpyIndex}'`,
-                            }],
-                            optional: false
-                        }
-                    });
+                    insertSpyCall(node.alternate.body, pathHash, currentSpyIndex);
+                },
+
+                WhileStatement(node) {
+                    // console.log(JSON.stringify(node,null,2));
+
+                    currentSpyIndex += 1;
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
+
+                    // At this point, `node` must be a BlockStatement.
+                    // Insert the `WEENIFY.spy()` call at the top of the block.
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
             })
 
@@ -157,24 +123,15 @@ export default function addSpies(options = {}) {
     }
 }
 
-function insertSpies(blockNode, path, currentSpyIndex, endInsertIndex, extendDelete) {
-    blockNode.body.unshift(createSpyFunction(
-        'B', // before
-        path,
-        currentSpyIndex,
-        extendDelete,
-    ));
-    blockNode.body.splice(endInsertIndex + 1, 0, createSpyFunction(
-        'E', // end
-        path,
-        currentSpyIndex,
-        extendDelete,
-    ));
-}
-
-function createSpyFunction(place, pathHash, index, extendDelete) {
-    const id = `${place}-${pathHash}-${index}-${extendDelete}`;
-    return {
+function insertSpyCall(body, pathHash, index) {
+    if (typeof body !== 'object')
+        throw Error(`insertSpyCall(): body is '${typeof body}' not 'object'`);
+    if (! Array.isArray(body))
+        throw Error(`insertSpyCall(): body is '${body.constructor.name}' not an array`);
+    if (typeof body.unshift !== 'function')
+        throw Error('insertSpyCall(): No unshift() on:', console.log(JSON.stringify(body,null,2)));
+    const id = `${pathHash}-${index}`;
+    body.unshift({
         type: 'ExpressionStatement',
         start: 0,
         end: 0,
@@ -197,7 +154,7 @@ function createSpyFunction(place, pathHash, index, extendDelete) {
             }],
             optional: false
         }
-    }
+    });
 }
 
 function createBlockStatementNode(singleChildNode) {

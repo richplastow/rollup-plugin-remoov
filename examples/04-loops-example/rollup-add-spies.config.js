@@ -6,13 +6,13 @@
 
 import addSpies from '../../rollup-plugin-weenify-add-spies.js';
 
-const PATH = 'examples/04-edge-cases-example/';
+const PATH = 'examples/04-loops-example/';
 
 export default {
     input: `${PATH}src/04-main.js`,
     output: {
         format: 'es',
-        file: `${PATH}build-with-spies/04-edge-cases-example.js`,
+        file: `${PATH}build-with-spies/04-loops-example.js`,
         plugins: [],
     },
     plugins: [addSpies({

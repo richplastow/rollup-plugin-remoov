@@ -78,13 +78,14 @@ function transform(source, options, parse, passes) {
 
     let regenerated = generate(ast);
     if (regenerated.indexOf('WEENIFY.spy(') !== -1) {
-        if (passes > 0) {
+        if (passes > 1) {
             return transform(regenerated, options, parse, passes - 1);
         } else {
             throw Error(`rollup-plugin-weenify options.passes is ${options.passes}, but still found 'WEENIFY.spy('`);
         }
     } else {
-        return `${regenerated}\n\n// Weenify passes needed: ${options.passes - passes}`;
+        // console.log(regenerated);
+        return `${regenerated}\n\n// Weenify passes needed: ${options.passes - passes + 1}`;
     }
 }
 

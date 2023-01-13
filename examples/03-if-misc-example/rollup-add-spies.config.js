@@ -6,13 +6,13 @@
 
 import addSpies from '../../rollup-plugin-weenify-add-spies.js';
 
-const PATH = 'examples/03-if-return-example/';
+const PATH = 'examples/03-if-misc-example/';
 
 export default {
     input: `${PATH}src/03-main.js`,
     output: {
         format: 'es',
-        file: `${PATH}build-with-spies/03-if-return-example.js`,
+        file: `${PATH}build-with-spies/03-if-misc-example.js`,
         plugins: [],
     },
     plugins: [addSpies({
