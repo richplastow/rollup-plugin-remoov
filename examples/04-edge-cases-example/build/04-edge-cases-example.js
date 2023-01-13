@@ -7,3 +7,6 @@ function ifsNestedBasic(redBlue, greenYellow) {
   }
 }
 ifsNestedBasic('RED', 'GREEN');
+
+
+// Weenify passes: 1
