@@ -40,8 +40,7 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 class ClassMethodInstance {
   methodClassicCalled(doCallSecond) {
@@ -114,8 +113,7 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 class ClassMethodStatic {
   static methodClassicCalled(doCallSecond) {
@@ -188,8 +186,7 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 const functionArrowBlockCalled = doCallSecond => {
   WEENIFY.spy('8syec4-0');
@@ -251,8 +248,7 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function functionClassicCalled(doCallSecond) {
   WEENIFY.spy('wz184r-0');
@@ -306,8 +302,7 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 const objectMethod = {
   methodClassicCalled(doCallSecond) {

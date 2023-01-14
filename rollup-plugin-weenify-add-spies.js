@@ -172,8 +172,7 @@ export default function addSpies(options = {}) {
                         `    setTimeout(() => W.scan(), ${options.callScan});\n` +
                         "    W.didPrepScanCall = true;\n" +
                         "}",
-                    "}(); // end iife",
-                    "// END_WEENIFY_BOILERPLATE",
+                    "}(); // end iife // END_WEENIFY_BOILERPLATE",
                     "",
                     regenerated,
                 ].join('\n');
