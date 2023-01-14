@@ -1,4 +1,7 @@
-import { simple as simpleWalk } from 'acorn-walk';
+import {
+    ancestor as ancestorWalk,
+    simple as simpleWalk,
+} from 'acorn-walk';
 import { generate } from 'astring';
 
 export default function addSpies(options = {}) {
@@ -11,6 +14,7 @@ export default function addSpies(options = {}) {
 
             // console.log(JSON.stringify(ast,null,2));
             
+            // Most Nodes can be dealt with using a simple walk.
             simpleWalk(ast, {
 
                 ArrowFunctionExpression(node) {
@@ -73,14 +77,9 @@ export default function addSpies(options = {}) {
                 },
 
                 ForInStatement(node) {
-                    // console.log(JSON.stringify(node,null,2));
-
                     currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-
-                    // At this point, `node` must be a BlockStatement.
-                    // Insert the `WEENIFY.spy()` call at the top of the block.
                     insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
 
@@ -99,14 +98,9 @@ export default function addSpies(options = {}) {
                 },
 
                 FunctionExpression(node) { // MethodDefinition contains this
-                    // console.log(JSON.stringify(node,null,2));
-
                     currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-
-                    // At this point, `node` must be a BlockStatement.
-                    // Insert the `WEENIFY.spy()` call at the top of the block.
                     insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
 
@@ -116,7 +110,51 @@ export default function addSpies(options = {}) {
                         node.body = createBlockStatementNode(node.body);
                     insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
-            })
+            });
+
+            // Property Nodes need an ancestor walk, so that a getter and setter
+            // can be placed alongside each other.
+            ancestorWalk(ast, {
+                Property(node, ancestors) {
+
+                    // Weenify spies on property access by converting simple
+                    // literal properties into getters.
+                    if (node.kind !== 'init') return; // @TODO describe when this is not 'init'
+                    if (node.value?.type !== 'Literal') return; // @TODO describe when this is not 'Literal'
+
+                    // Create an identifier for this `WEENIFY.spy()` call, unique
+                    // within the current `path`.
+                    currentSpyIndex += 1;
+
+                    // Get a reference to the object Node which contains the property.
+                    const object = ancestors[ancestors.length-2];
+                    if (object.type !== 'ObjectExpression') throw Error(
+                        `addSpies(): object.type is '${object.type}' not 'ObjectExpression'`);
+                    if (! Array.isArray(object.properties)) throw Error(
+                        `addSpies(): object.properties is '${typeof object.properties}' not an array`);
+                    // console.log(JSON.stringify(object,null,2));
+
+                    // Get the index of the property Node within the object.
+                    let found = false;
+                    let position = 0;
+                    for (; position<object.properties.length; position++)
+                        if (object.properties[position] === node) {
+                            found = true;
+                            break;
+                        }
+                    if (! found) throw Error(
+                        `weenify(): object.properties does not contain the expected property`);
+
+                    // Svae the property’s name and value, before deleting it.
+                    const key = node.key;
+                    const defaultValue = node.value;
+                    object.properties.splice(position, 1);
+
+                    // Generate and add the getter and setter.
+                    insertGetter(object.properties, pathHash, currentSpyIndex, position, key, defaultValue);
+                    insertSetter(object.properties, pathHash, currentSpyIndex, position + 1, key, defaultValue);
+                },
+            });
 
             // console.log(JSON.stringify(ast,null,2));
             let regenerated = generate(ast);
@@ -184,14 +222,14 @@ export default function addSpies(options = {}) {
     }
 }
 
-function insertSpyCall(body, pathHash, index) {
+function insertSpyCall(body, pathHash, index, xtra = false) {
     if (typeof body !== 'object')
         throw Error(`insertSpyCall(): body is '${typeof body}' not 'object'`);
     if (! Array.isArray(body))
         throw Error(`insertSpyCall(): body is '${body.constructor.name}' not an array`);
     if (typeof body.unshift !== 'function')
         throw Error('insertSpyCall(): No unshift() on:', console.log(JSON.stringify(body,null,2)));
-    const id = `${pathHash}-${index}`;
+    const id = `${pathHash}-${index}${xtra ? `-${xtra}` : ''}`;
     body.unshift({
         type: 'ExpressionStatement',
         start: 0,
@@ -225,6 +263,185 @@ function createBlockStatementNode(singleChildNode) {
         end: 0,
         body: [singleChildNode],
     }
+}
+
+function insertGetter(properties, pathHash, index, position, key, defaultValue) {
+    if (typeof properties !== 'object')
+        throw Error(`insertGetter(): properties is '${typeof properties}' not 'object'`);
+    if (! Array.isArray(properties))
+        throw Error(`insertGetter(): properties is '${properties.constructor.name}' not an array`);
+    if (typeof properties.splice !== 'function')
+        throw Error('insertGetter(): No splice() on:', console.log(JSON.stringify(properties,null,2)));
+    const getter = {
+        type: 'Property',
+        start: 0,
+        end: 0,
+        method: false,
+        shorthand: false,
+        computed: false,
+        key,
+        kind: 'get',
+        value: {
+            type: 'FunctionExpression',
+            start: 0,
+            end: 0,
+            id: null,
+            expression: false,
+            generator: false,
+            async: false,
+            params: [],
+            body: {
+                type: 'BlockStatement',
+                start: 0,
+                end: 0,
+                body: [{
+                    type: 'ReturnStatement',
+                    start: 0,
+                    end: 0,
+                    argument: {
+                        type: 'ConditionalExpression',
+                        start: 0,
+                        end: 0,
+                        test: {
+                        type: 'BinaryExpression',
+                        start: 0,
+                        end: 0,
+                        left: {
+                            type: 'UnaryExpression',
+                            start: 0,
+                            end: 0,
+                            operator: 'typeof',
+                            prefix: true,
+                            argument: {
+                                type: 'MemberExpression',
+                                start: 0,
+                                end: 0,
+                                object: {
+                                    type: 'ThisExpression',
+                                    start: 0,
+                                    end: 0,
+                                },
+                                property: {
+                                    type: 'Identifier',
+                                    start: 0,
+                                    end: 0,
+                                    name: `__WEENIFY__${key.name || key.value}`
+                                },
+                                computed: false,
+                                optional: false
+                            }
+                        },
+                        operator: '===',
+                        right: {
+                            type: 'Literal',
+                            start: 0,
+                            end: 0,
+                            value: 'undefined',
+                            raw: "'undefined'"
+                        }
+                        },
+                        consequent: defaultValue,
+                        alternate: {
+                            type: 'MemberExpression',
+                            start: 0,
+                            end: 0,
+                            object: {
+                                type: 'ThisExpression',
+                                start: 0,
+                                end: 0,
+                            },
+                            property: {
+                                type: 'Identifier',
+                                start: 0,
+                                end: 0,
+                                name: `__WEENIFY__${key.name || key.value}`
+                            },
+                            computed: false,
+                            optional: false
+                        }
+                    }
+                }]
+            }
+        }
+    };
+    insertSpyCall(getter.value.body.body, pathHash, index, 'G');
+    properties.splice(position, 0, getter);
+}
+
+function insertSetter(properties, pathHash, index, position, key) {
+    if (typeof properties !== 'object')
+        throw Error(`insertSetter(): properties is '${typeof properties}' not 'object'`);
+    if (! Array.isArray(properties))
+        throw Error(`insertSetter(): properties is '${properties.constructor.name}' not an array`);
+    if (typeof properties.splice !== 'function')
+        throw Error('insertSetter(): No splice() on:', console.log(JSON.stringify(properties,null,2)));
+    const setter = {
+        type: 'Property',
+        start: 0,
+        end: 0,
+        method: false,
+        shorthand: false,
+        computed: false,
+        key,
+        kind: 'set',
+        value: {
+            type: 'FunctionExpression',
+            start: 0,
+            end: 0,
+            id: null,
+            expression: false,
+            generator: false,
+            async: false,
+            params: [{
+                type: 'Identifier',
+                start: 0,
+                end: 0,
+                name: 'val'
+            }],
+            body: {
+                type: 'BlockStatement',
+                start: 0,
+                end: 0,
+                body: [{
+                    type: 'ExpressionStatement',
+                    start: 0,
+                    end: 0,
+                    expression: {
+                        type: 'AssignmentExpression',
+                        start: 0,
+                        end: 0,
+                        operator: '=',
+                        left: {
+                            type: 'MemberExpression',
+                            start: 0,
+                            end: 0,
+                            object: {
+                                type: 'ThisExpression',
+                                start: 0,
+                                end: 0
+                            },
+                            property: {
+                                type: 'Identifier',
+                                start: 0,
+                                end: 0,
+                                name: `__WEENIFY__${key.name || key.value}`
+                            },
+                            computed: false,
+                            optional: false
+                        },
+                        right: {
+                            type: 'Identifier',
+                            start: 0,
+                            end: 0,
+                            name: 'val'
+                        }
+                    }
+                }]
+            }
+        }
+    };
+    insertSpyCall(setter.value.body.body, pathHash, index, 'S');
+    properties.splice(position, 0, setter);
 }
 
 function hash(str) {
