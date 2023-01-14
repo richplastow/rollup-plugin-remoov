@@ -7,7 +7,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['8tdzor'] = 4;
+W.numSpies['8tdzor'] = 5;
 W.spyResults = W.spyResults || {};
 W.spyResults['8tdzor'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -40,10 +40,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function loopsForClassic(zero, one, two) {
+  WEENIFY.spy('8tdzor-4');
   for (let i = zero; i < two; i++) {
     WEENIFY.spy('8tdzor-0');
     console.log('First classic for loop (block) - will be used.');
@@ -71,7 +71,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['4s0u2m'] = 4;
+W.numSpies['4s0u2m'] = 5;
 W.spyResults = W.spyResults || {};
 W.spyResults['4s0u2m'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -104,10 +104,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function loopsForIn(fullObj, emptyObj) {
+  WEENIFY.spy('4s0u2m-4');
   for (const key in fullObj) {
     WEENIFY.spy('4s0u2m-0');
     console.log('First for in loop (block) - will be used.', key);
@@ -135,7 +135,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['4ov6eo'] = 4;
+W.numSpies['4ov6eo'] = 5;
 W.spyResults = W.spyResults || {};
 W.spyResults['4ov6eo'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -168,10 +168,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function loopsForOf(fullArr, emptyArr) {
+  WEENIFY.spy('4ov6eo-4');
   for (const val of fullArr) {
     WEENIFY.spy('4ov6eo-0');
     console.log('First for of loop (block) - will be used.', val);
@@ -199,7 +199,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['clx9pq'] = 4;
+W.numSpies['clx9pq'] = 5;
 W.spyResults = W.spyResults || {};
 W.spyResults['clx9pq'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -232,10 +232,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function loopsWhile(a, b) {
+  WEENIFY.spy('clx9pq-4');
   while (a) {
     WEENIFY.spy('clx9pq-0');
     console.log('First and second while loops will both be used.');

@@ -4,7 +4,7 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        '98ojcf': [ 0,1 ]
+        '98ojcf': [ 0,1,0 ]
     },
 };
 

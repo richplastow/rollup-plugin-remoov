@@ -8,11 +8,11 @@ function ifElseIfElseWithoutBlocks(redBlue) {
     console.log('2nd IfStatement alternate NOT a block - will be used.');
   }
 }
-function basicExample(redBlue) {
+function ifElseIfElseExample(redBlue) {
   ifElseIfElseWithBlocks(redBlue);
   ifElseIfElseWithoutBlocks(redBlue);
 }
-basicExample('RED');
+ifElseIfElseExample('RED');
 
 
-// Weenify passes needed: 1
+// Weenify passes needed: 2

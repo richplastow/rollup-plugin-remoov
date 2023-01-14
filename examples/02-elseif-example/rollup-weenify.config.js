@@ -4,7 +4,8 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        '6bcklh': [ 1,1,0,1,0,1 ]
+        '6bcklh': [ 1,1,0,0,1,0,1,0 ],
+        '4iv985': [ 0 ]
     },
 };
 

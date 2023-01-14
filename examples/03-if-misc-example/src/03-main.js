@@ -3,7 +3,7 @@ import ifContinue from './03-if-continue.js';
 import ifReturn from './03-if-return.js';
 // import ifStatements from './03-if-statements.js'; @TODO
 import ifThrow from './03-if-throw.js';
-import ifsNestedBasic from "./03-ifs-nested-basic";
+import ifsNestedBasic from "./03-ifs-nested-basic.js";
 
 ifBreak('RED');
 ifContinue('RED');

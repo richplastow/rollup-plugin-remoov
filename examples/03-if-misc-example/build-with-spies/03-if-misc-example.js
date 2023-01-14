@@ -7,7 +7,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['5wfsj7'] = 2;
+W.numSpies['5wfsj7'] = 4;
 W.spyResults = W.spyResults || {};
 W.spyResults['5wfsj7'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -40,11 +40,12 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function ifBreak(redBlue) {
+  WEENIFY.spy('5wfsj7-3');
   while (true) {
+    WEENIFY.spy('5wfsj7-2');
     if (redBlue === 'RED') {
       WEENIFY.spy('5wfsj7-0');
       console.log('IfStatement consequent block - will be used.');
@@ -66,7 +67,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['lskjtx'] = 2;
+W.numSpies['lskjtx'] = 4;
 W.spyResults = W.spyResults || {};
 W.spyResults['lskjtx'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -99,12 +100,13 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function ifContinue(redBlue) {
+  WEENIFY.spy('lskjtx-3');
   let doLoop = true;
   while (doLoop) {
+    WEENIFY.spy('lskjtx-2');
     if (redBlue === 'RED') {
       WEENIFY.spy('lskjtx-0');
       console.log('IfStatement consequent block - will be used.');
@@ -128,7 +130,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['osglam'] = 2;
+W.numSpies['osglam'] = 3;
 W.spyResults = W.spyResults || {};
 W.spyResults['osglam'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -161,10 +163,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function ifReturn(redBlue) {
+  WEENIFY.spy('osglam-2');
   if (redBlue === 'RED') {
     WEENIFY.spy('osglam-0');
     console.log('IfStatement consequent block - is never actually used.');
@@ -185,7 +187,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['hcrhqe'] = 2;
+W.numSpies['hcrhqe'] = 3;
 W.spyResults = W.spyResults || {};
 W.spyResults['hcrhqe'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -218,10 +220,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function ifThrow(redBlue) {
+  WEENIFY.spy('hcrhqe-2');
   if (redBlue === 'RED') {
     WEENIFY.spy('hcrhqe-0');
     console.log('IfStatement consequent block - is never actually used.');
@@ -242,7 +244,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['cvjz65'] = 3;
+W.numSpies['cvjz65'] = 4;
 W.spyResults = W.spyResults || {};
 W.spyResults['cvjz65'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -275,10 +277,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function ifsNestedBasic(redBlue, greenYellow) {
+  WEENIFY.spy('cvjz65-3');
   if (redBlue === 'RED') {
     WEENIFY.spy('cvjz65-2');
     console.log('Outer IfStatement consequent block - will be used.');

@@ -99,7 +99,7 @@ export default function addSpies(options = {}) {
                 },
 
                 FunctionExpression(node) { // MethodDefinition contains this
-                    console.log(JSON.stringify(node,null,2));
+                    // console.log(JSON.stringify(node,null,2));
 
                     currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')

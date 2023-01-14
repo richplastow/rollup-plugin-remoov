@@ -6,4 +6,4 @@ function basicExample(redBlue) {
 basicExample('RED');
 
 
-// Weenify passes needed: 1
+// Weenify passes needed: 2

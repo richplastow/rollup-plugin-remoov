@@ -7,7 +7,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['98ojcf'] = 2;
+W.numSpies['98ojcf'] = 3;
 W.spyResults = W.spyResults || {};
 W.spyResults['98ojcf'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -40,10 +40,10 @@ if (! W.didPrepScanCall) {
     setTimeout(() => W.scan(), 10);
     W.didPrepScanCall = true;
 }
-}(); // end iife
-// END_WEENIFY_BOILERPLATE
+}(); // end iife // END_WEENIFY_BOILERPLATE
 
 function basicExample(redBlue) {
+  WEENIFY.spy('98ojcf-2');
   if (redBlue === 'RED') {
     WEENIFY.spy('98ojcf-0');
     console.log('1st IfStatement consequent block - will be used.');

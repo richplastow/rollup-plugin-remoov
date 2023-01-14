@@ -21,12 +21,8 @@ function loopsForOf(fullArr, emptyArr) {
   for (const val of fullArr) {
     console.log('Second for of loop (no block) - will also be used.', val);
   }
-  for (const val of emptyArr) {
-    /* Weenified */
-  }
-  for (const val of emptyArr) {
-    /* Weenified */
-  }
+  for (const val of emptyArr) {}
+  for (const val of emptyArr) {}
 }
 function loopsWhile(a, b) {
   while (a) {
@@ -43,4 +39,4 @@ loopsForOf(['a', 'b'], []);
 loopsWhile(true);
 
 
-// Weenify passes needed: 1
+// Weenify passes needed: 2
