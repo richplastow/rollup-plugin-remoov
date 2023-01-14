@@ -9,7 +9,29 @@ export default function addSpies(options = {}) {
             const pathHash = hash(path);
             let currentSpyIndex = -1;
 
+            // console.log(JSON.stringify(ast,null,2));
+            
             simpleWalk(ast, {
+
+                ArrowFunctionExpression(node) {
+                    // Create an identifier for this `WEENIFY.spy()` call, unique
+                    // within the current `path`.
+                    currentSpyIndex += 1;
+
+                    // A 'statement' Node must be wrapped in a block, so that
+                    // `WEENIFY.spy()` can be inserted at the top of that block.
+                    // An arrow function might be:
+                    // - ExpressionStatement: (a) => b()
+                    // which must be transformed into:
+                    // - BlockStatement:      (a) => { b() }
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
+
+                    // At this point, `node` must be a BlockStatement.
+                    // Insert the `WEENIFY.spy()` call at the top of the block.
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                },
+
                 IfStatement(node) {
                     // Create an identifier for this `WEENIFY.spy()` call, unique
                     // within the current `path`.
@@ -66,6 +88,25 @@ export default function addSpies(options = {}) {
                     currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                },
+
+                FunctionDeclaration(node) {
+                    currentSpyIndex += 1;
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
+                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                },
+
+                FunctionExpression(node) { // MethodDefinition contains this
+                    console.log(JSON.stringify(node,null,2));
+
+                    currentSpyIndex += 1;
+                    if (node.body.type !== 'BlockStatement')
+                        node.body = createBlockStatementNode(node.body);
+
+                    // At this point, `node` must be a BlockStatement.
+                    // Insert the `WEENIFY.spy()` call at the top of the block.
                     insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
 
