@@ -196,7 +196,7 @@ function transform(source, options, parse, passes) {
             throw Error(`rollup-plugin-weenify options.passes is ${options.passes}, but still found 'WEENIFY.spy('`);
         }
     } else {
-        // console.log(regenerated);
+        console.log(regenerated);
         return `${regenerated}\n\n// Weenify passes needed: ${options.passes - passes + 1}`;
     }
 }

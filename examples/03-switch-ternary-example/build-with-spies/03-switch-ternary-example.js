@@ -7,7 +7,7 @@ typeof window === 'object'
 !function(){ // begin iife
 const W = typeof window === 'object' ? window.WEENIFY : global.WEENIFY;
 W.numSpies = W.numSpies || {};
-W.numSpies['t5mm7v'] = 7;
+W.numSpies['t5mm7v'] = 9;
 W.spyResults = W.spyResults || {};
 W.spyResults['t5mm7v'] = [];
 W.spyCalls = W.spyCalls || {};
@@ -43,7 +43,7 @@ if (! W.didPrepScanCall) {
 }(); // end iife // END_WEENIFY_BOILERPLATE
 
 function switchBasic(redBlue) {
-  WEENIFY.spy('t5mm7v-6');
+  WEENIFY.spy('t5mm7v-8');
   switch (redBlue) {
     case 'RED':
       {
@@ -57,26 +57,34 @@ function switchBasic(redBlue) {
         console.log('03-switch-basic: SwitchCase block and break - never actually used.');
         break;
       }
-    default:
+    case 'YELLOW':
       {
         WEENIFY.spy('t5mm7v-2');
+      }
+    default:
+      {
+        WEENIFY.spy('t5mm7v-3');
         console.log('03-switch-basic: Default SwitchCase block - never actually used.');
       }
   }
   switch (redBlue) {
     case 'RED':
       {
-        WEENIFY.spy('t5mm7v-3');
+        WEENIFY.spy('t5mm7v-4');
         console.log('2 of 4: 03-switch-basic: SwitchCase no-block, no-break - will be used.');
       }
     case 'BLUE':
       {
-        WEENIFY.spy('t5mm7v-4');
+        WEENIFY.spy('t5mm7v-5');
         console.log('3 of 4: 03-switch-basic: SwitchCase no-block, no-break - is also used, because `case` line 14 has no `break`.');
+      }
+    case 'YELLOW':
+      {
+        WEENIFY.spy('t5mm7v-6');
       }
     default:
       {
-        WEENIFY.spy('t5mm7v-5');
+        WEENIFY.spy('t5mm7v-7');
         console.log('4 of 4: 03-switch-basic: Default SwitchCase no-block - is also used, because `case` line 14 has no `break`.');
       }
   }

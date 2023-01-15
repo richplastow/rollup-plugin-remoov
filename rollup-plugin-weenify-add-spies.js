@@ -105,10 +105,24 @@ export default function addSpies(options = {}) {
                 },
 
                 SwitchStatement(node) {
+                    currentSpyIndex += 1;
+                    // if (! Array.isArray(node.cases)) throw Error(
+                    //     `addSpies(): SwitchStatement cases is not an array`);
                     for (const caseNode of node.cases) {
-                        currentSpyIndex += 1;
-                        if (caseNode.consequent[0].type !== 'BlockStatement')
-                        caseNode.consequent[0] = createBlockStatementNode(caseNode.consequent[0]);
+                        // if (! Array.isArray(caseNode.consequent)) throw Error(
+                        //     `addSpies(): SwitchCase consequent is not an array`);
+                        if (caseNode.consequent.length === 0) {
+                            caseNode.consequent.push({
+                                type: 'BlockStatement',
+                                start: 0,
+                                end: 0,
+                                body: [],
+                            });
+                        // } else if (! caseNode.consequent[0]) {
+                        //     throw Error(`addSpies(): SwitchCase consequent[0] is falsey:\n${JSON.stringify(caseNode,null,2)}`);
+                        } else if (caseNode.consequent[0].type !== 'BlockStatement') {
+                            caseNode.consequent[0] = createBlockStatementNode(caseNode.consequent[0]);
+                        }
                         insertSpyCall(caseNode.consequent[0].body, pathHash, currentSpyIndex);
                     }
                 },
