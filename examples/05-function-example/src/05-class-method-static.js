@@ -1,27 +1,27 @@
 export default class ClassMethodStatic {
-    static methodClassicCalled(doCallSecond) {
+    static classMethodStaticClassicCalled(doCallSecond) {
         console.log('First static classic method will be used.');
-        return doCallSecond && ClassMethodStatic.methodClassicNotCalled();
+        return doCallSecond && ClassMethodStatic.classMethodStaticClassicNotCalled();
     }
-    static methodClassicNotCalled() {
+    static classMethodStaticClassicNotCalled() {
         console.log('Second static classic method will not be used.');
     }    
 }
 
-ClassMethodStatic.methodArrowBlockCalled = (doCallSecond) => {
+ClassMethodStatic.classMethodStaticArrowBlockCalled = (doCallSecond) => {
     console.log('First static arrow block method will be used.');
-    return doCallSecond && ClassMethodStatic.methodArrowBlockNotCalled();
+    return doCallSecond && ClassMethodStatic.classMethodStaticArrowBlockNotCalled();
 }
 
-ClassMethodStatic.methodArrowBlockNotCalled = () => {
+ClassMethodStatic.classMethodStaticArrowBlockNotCalled = () => {
     console.log('Second static arrow block method will not be used.');
 }    
 
-ClassMethodStatic.methodArrowNoBlockCalled = (doCallSecond) =>
+ClassMethodStatic.classMethodStaticArrowNoBlockCalled = (doCallSecond) =>
     console.log('First static arrow no block method will be used.')
         || doCallSecond
-        && ClassMethodStatic.methodArrowNoBlockNotCalled()
+        && ClassMethodStatic.classMethodStaticArrowNoBlockNotCalled()
     ;
 
-ClassMethodStatic.methodArrowNoBlockNotCalled = () =>
+ClassMethodStatic.classMethodStaticArrowNoBlockNotCalled = () =>
     console.log('Second static arrow no block method will not be used.');

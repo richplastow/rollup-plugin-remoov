@@ -91,19 +91,40 @@ function transform(source, options, parse, passes) {
                         `weenify(): rtn.type is '${rtn.type}' not 'ReturnStatement'`);
                     property.value = rtn.argument.consequent;
                 }
-
                 return;
             }
+
+            // Not a getter or setter which Weenify has created.
+            // Could be a normal function, arrow function, or class method.
 
             // Get a reference to the block Node which contains this
             // `WEENIFY.spy('...')` call.
             const block = ancestors[ancestors.length-3];
+            if (block.type !== 'BlockStatement') throw Error(
+                `weenify(): block.type is '${block.type}' not 'BlockStatement'`);
+            if (block.body[0].type !== 'ExpressionStatement') throw Error(
+                `weenify(): block.body[0].type is '${block.body[0].type}' not 'ExpressionStatement'`);
+            if (block.body[0].expression !== node) throw Error(
+                `weenify(): block.body[0].expression is not the WEENIFY.spy() CallExpression`);
 
-            if (doRemove) {
-                // Replace everything inside the block with a JavaScript
-                // comment, `/* Weenified */`.
-                // Note that `ancestors[ancestors.length-3].body = [];` would
-                // clear the block, because Acorn Nodes reimplement splice() etc.
+            // If the block contains code which was run, just delete the
+            // CallExpression of the `WEENIFY.spy()` (0th Node in block.body).
+            if (! doRemove) {
+                block.body.shift();
+                return;
+            }
+
+            // If the block is not inside a function or method, just replace
+            // everything inside the block with a JavaScript comment:
+            // `/* Weenified */`.
+            // Note that `ancestors[ancestors.length-3].body = [];` would not
+            // clear the block, because Acorn Nodes reimplement splice() etc.
+            const ancestor_4 = ancestors[ancestors.length-4];
+            const type_4 = ancestor_4?.type;
+            if (
+                type_4 !== 'FunctionExpression' &&
+                type_4 !== 'ArrowFunctionExpression'
+            ) {
                 block.body.splice(
                     0,
                     block.body.length,
@@ -115,11 +136,55 @@ function transform(source, options, parse, passes) {
                         raw: '/* Weenified */',
                     }
                 );
-            } else {
-                // Just delete the `WEENIFY.spy('...')` call, which should
-                // always by the first Node in block.body.
-                block.body.shift();
+                return;
             }
+
+            // The block belongs to an unused function, which can be completely
+            // removed. To figure out the array that the CallExpression is in,
+            // we actually need to look several levels up the nested hierarchy.
+            const ancestor_5 = ancestors[ancestors.length-5];
+            const type_5 = ancestor_5?.type;
+            const ancestor_6 = ancestors[ancestors.length-6];
+            const type_6 = ancestor_6?.type;
+            const ancestor_7 = ancestors[ancestors.length-7];
+
+            // If ancestor_5 is the Program, remove the function from its body.
+            if (type_5 === 'Program') {
+                let found = false, index = 0;
+                for (; index<ancestor_5.body.length; index++)
+                    if (ancestor_5.body[index] === ancestor_4) {
+                        found = true; break; }
+                if (! found) throw Error(
+                    `weenify(): Program body does not contain ancestor_4`);
+                ancestor_5.body.splice(index, 1);
+                return;
+            }
+// const name = ancestor_6.key?.name || ancestor_5.key?.name || ancestor_5.left?.property?.name || ancestor_5.id?.name || ancestor_4.key?.name || '??';
+// console.log('REMOVE:', name, JSON.stringify(ancestor_5,null,2));
+
+            let listOwner = null;
+            let functionToRemove = null;
+
+            if (type_6 === 'ExpressionStatement' || type_6 === 'VariableDeclaration') {
+                listOwner = ancestor_7;
+                functionToRemove = ancestor_6;
+            } else {
+                listOwner = ancestor_6;
+                functionToRemove = ancestor_5;
+            }
+
+            const contentList = listOwner?.body || listOwner?.properties || null;
+            if (! contentList || ! functionToRemove) throw Error(
+                `weenify(): ancestor_6.${arrayName} (${ancestor_6.type}) is falsey: ${JSON.stringify(ancestor_6,null,2)}`);
+
+            // Remove the function from the list owner's `body` or `properties` array.
+            let found = false, index = 0;
+            for (; index<contentList.length; index++)
+                if (contentList[index] === functionToRemove) {
+                    found = true; break; }
+            if (! found) throw Error(
+                `weenify(): contentList does not contain the function to remove`);
+            contentList.splice(index, 1);
         }
     });
 

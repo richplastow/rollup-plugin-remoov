@@ -1,27 +1,27 @@
 const objectMethod = {
-    methodClassicCalled(doCallSecond) {
-        console.log('First instance classic method will be used.');
-        return doCallSecond && objectMethod.methodClassicNotCalled();
+    objectMethodClassicCalled(doCallSecond) {
+        console.log('First instance classic object method will be used.');
+        return doCallSecond && objectMethod.objectMethodClassicNotCalled();
     },
-    methodClassicNotCalled() {
-        console.log('Second instance classic method will not be used.');
-    },
-
-    methodArrowBlockCalled: (doCallSecond) => {
-        console.log('First instance arrow block method will be used.');
-        return doCallSecond && objectMethod.methodArrowBlockNotCalled();
-    },
-    methodArrowBlockNotCalled: () => {
-        console.log('Second instance arrow block method will not be used.');
+    objectMethodClassicNotCalled() {
+        console.log('Second instance classic object method will not be used.');
     },
 
-    methodArrowNoBlockCalled: (doCallSecond) =>
-        console.log('First instance arrow no block method will be used.')
+    objectMethodArrowBlockCalled: (doCallSecond) => {
+        console.log('First instance arrow block object method will be used.');
+        return doCallSecond && objectMethod.objectMethodArrowBlockNotCalled();
+    },
+    objectMethodArrowBlockNotCalled: () => {
+        console.log('Second instance arrow block object method will not be used.');
+    },
+
+    objectMethodArrowNoBlockCalled: (doCallSecond) =>
+        console.log('First instance arrow no block object method will be used.')
             || doCallSecond
-            && objectMethod.methodArrowNoBlockNotCalled()
+            && objectMethod.objectMethodArrowNoBlockNotCalled()
     ,
-    methodArrowNoBlockNotCalled: () =>
-        console.log('Second instance arrow no block method will not be used.')
+    objectMethodArrowNoBlockNotCalled: () =>
+        console.log('Second instance arrow no block object method will not be used.')
     ,
 }
 

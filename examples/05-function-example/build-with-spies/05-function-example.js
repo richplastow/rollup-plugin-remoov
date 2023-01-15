@@ -43,29 +43,29 @@ if (! W.didPrepScanCall) {
 }(); // end iife // END_WEENIFY_BOILERPLATE
 
 class ClassMethodInstance {
-  methodClassicCalled(doCallSecond) {
+  classMethodInstanceClassicCalled(doCallSecond) {
     WEENIFY.spy('poty2u-0');
     console.log('First instance classic method will be used.');
-    return doCallSecond && this.methodClassicNotCalled();
+    return doCallSecond && this.classMethodInstanceClassicNotCalled();
   }
-  methodClassicNotCalled() {
+  classMethodInstanceClassicNotCalled() {
     WEENIFY.spy('poty2u-1');
     console.log('Second instance classic method will not be used.');
   }
-  methodArrowBlockCalled = doCallSecond => {
+  classMethodInstanceArrowBlockCalled = doCallSecond => {
     WEENIFY.spy('poty2u-2');
     console.log('First instance arrow block method will be used.');
-    return doCallSecond && this.methodArrowBlockNotCalled();
+    return doCallSecond && this.classMethodInstanceArrowBlockNotCalled();
   };
-  methodArrowBlockNotCalled = () => {
+  classMethodInstanceArrowBlockNotCalled = () => {
     WEENIFY.spy('poty2u-3');
     console.log('Second instance arrow block method will not be used.');
   };
-  methodArrowNoBlockCalled = doCallSecond => {
+  classMethodInstanceArrowNoBlockCalled = doCallSecond => {
     WEENIFY.spy('poty2u-4');
-    console.log('First instance arrow no block method will be used.') || doCallSecond && this.methodArrowNoBlockNotCalled();
+    console.log('First instance arrow no block method will be used.') || doCallSecond && this.classMethodInstanceArrowNoBlockNotCalled();
   };
-  methodArrowNoBlockNotCalled = () => {
+  classMethodInstanceArrowNoBlockNotCalled = () => {
     WEENIFY.spy('poty2u-5');
     console.log('Second instance arrow no block method will not be used.');
   };
@@ -116,30 +116,30 @@ if (! W.didPrepScanCall) {
 }(); // end iife // END_WEENIFY_BOILERPLATE
 
 class ClassMethodStatic {
-  static methodClassicCalled(doCallSecond) {
+  static classMethodStaticClassicCalled(doCallSecond) {
     WEENIFY.spy('u4s4zj-0');
     console.log('First static classic method will be used.');
-    return doCallSecond && ClassMethodStatic.methodClassicNotCalled();
+    return doCallSecond && ClassMethodStatic.classMethodStaticClassicNotCalled();
   }
-  static methodClassicNotCalled() {
+  static classMethodStaticClassicNotCalled() {
     WEENIFY.spy('u4s4zj-1');
     console.log('Second static classic method will not be used.');
   }
 }
-ClassMethodStatic.methodArrowBlockCalled = doCallSecond => {
+ClassMethodStatic.classMethodStaticArrowBlockCalled = doCallSecond => {
   WEENIFY.spy('u4s4zj-2');
   console.log('First static arrow block method will be used.');
-  return doCallSecond && ClassMethodStatic.methodArrowBlockNotCalled();
+  return doCallSecond && ClassMethodStatic.classMethodStaticArrowBlockNotCalled();
 };
-ClassMethodStatic.methodArrowBlockNotCalled = () => {
+ClassMethodStatic.classMethodStaticArrowBlockNotCalled = () => {
   WEENIFY.spy('u4s4zj-3');
   console.log('Second static arrow block method will not be used.');
 };
-ClassMethodStatic.methodArrowNoBlockCalled = doCallSecond => {
+ClassMethodStatic.classMethodStaticArrowNoBlockCalled = doCallSecond => {
   WEENIFY.spy('u4s4zj-4');
-  console.log('First static arrow no block method will be used.') || doCallSecond && ClassMethodStatic.methodArrowNoBlockNotCalled();
+  console.log('First static arrow no block method will be used.') || doCallSecond && ClassMethodStatic.classMethodStaticArrowNoBlockNotCalled();
 };
-ClassMethodStatic.methodArrowNoBlockNotCalled = () => {
+ClassMethodStatic.classMethodStaticArrowNoBlockNotCalled = () => {
   WEENIFY.spy('u4s4zj-5');
   console.log('Second static arrow no block method will not be used.');
 };
@@ -305,45 +305,45 @@ if (! W.didPrepScanCall) {
 }(); // end iife // END_WEENIFY_BOILERPLATE
 
 const objectMethod = {
-  methodClassicCalled(doCallSecond) {
+  objectMethodClassicCalled(doCallSecond) {
     WEENIFY.spy('by96i1-0');
-    console.log('First instance classic method will be used.');
-    return doCallSecond && objectMethod.methodClassicNotCalled();
+    console.log('First instance classic object method will be used.');
+    return doCallSecond && objectMethod.objectMethodClassicNotCalled();
   },
-  methodClassicNotCalled() {
+  objectMethodClassicNotCalled() {
     WEENIFY.spy('by96i1-1');
-    console.log('Second instance classic method will not be used.');
+    console.log('Second instance classic object method will not be used.');
   },
-  methodArrowBlockCalled: doCallSecond => {
+  objectMethodArrowBlockCalled: doCallSecond => {
     WEENIFY.spy('by96i1-2');
-    console.log('First instance arrow block method will be used.');
-    return doCallSecond && objectMethod.methodArrowBlockNotCalled();
+    console.log('First instance arrow block object method will be used.');
+    return doCallSecond && objectMethod.objectMethodArrowBlockNotCalled();
   },
-  methodArrowBlockNotCalled: () => {
+  objectMethodArrowBlockNotCalled: () => {
     WEENIFY.spy('by96i1-3');
-    console.log('Second instance arrow block method will not be used.');
+    console.log('Second instance arrow block object method will not be used.');
   },
-  methodArrowNoBlockCalled: doCallSecond => {
+  objectMethodArrowNoBlockCalled: doCallSecond => {
     WEENIFY.spy('by96i1-4');
-    console.log('First instance arrow no block method will be used.') || doCallSecond && objectMethod.methodArrowNoBlockNotCalled();
+    console.log('First instance arrow no block object method will be used.') || doCallSecond && objectMethod.objectMethodArrowNoBlockNotCalled();
   },
-  methodArrowNoBlockNotCalled: () => {
+  objectMethodArrowNoBlockNotCalled: () => {
     WEENIFY.spy('by96i1-5');
-    console.log('Second instance arrow no block method will not be used.');
+    console.log('Second instance arrow no block object method will not be used.');
   }
 };
 
 const doCallSecond = false;
 const instance = new ClassMethodInstance();
-instance.methodArrowBlockCalled(doCallSecond);
-instance.methodArrowNoBlockCalled(doCallSecond);
-instance.methodClassicCalled(doCallSecond);
-ClassMethodStatic.methodArrowBlockCalled(doCallSecond);
-ClassMethodStatic.methodArrowNoBlockCalled(doCallSecond);
-ClassMethodStatic.methodClassicCalled(doCallSecond);
+instance.classMethodInstanceArrowBlockCalled(doCallSecond);
+instance.classMethodInstanceArrowNoBlockCalled(doCallSecond);
+instance.classMethodInstanceClassicCalled(doCallSecond);
+ClassMethodStatic.classMethodStaticArrowBlockCalled(doCallSecond);
+ClassMethodStatic.classMethodStaticArrowNoBlockCalled(doCallSecond);
+ClassMethodStatic.classMethodStaticClassicCalled(doCallSecond);
 functionArrowBlockCalled(doCallSecond);
 functionArrowNoBlockCalled(doCallSecond);
 functionClassicCalled(doCallSecond);
-objectMethod.methodArrowBlockCalled(doCallSecond);
-objectMethod.methodArrowNoBlockCalled(doCallSecond);
-objectMethod.methodClassicCalled(doCallSecond);
+objectMethod.objectMethodArrowBlockCalled(doCallSecond);
+objectMethod.objectMethodArrowNoBlockCalled(doCallSecond);
+objectMethod.objectMethodClassicCalled(doCallSecond);

@@ -1,25 +1,25 @@
 export default class ClassMethodInstance {
-    methodClassicCalled(doCallSecond) {
+    classMethodInstanceClassicCalled(doCallSecond) {
         console.log('First instance classic method will be used.');
-        return doCallSecond && this.methodClassicNotCalled();
+        return doCallSecond && this.classMethodInstanceClassicNotCalled();
     }
-    methodClassicNotCalled() {
+    classMethodInstanceClassicNotCalled() {
         console.log('Second instance classic method will not be used.');
     }
 
-    methodArrowBlockCalled = (doCallSecond) => {
+    classMethodInstanceArrowBlockCalled = (doCallSecond) => {
         console.log('First instance arrow block method will be used.');
-        return doCallSecond && this.methodArrowBlockNotCalled();
+        return doCallSecond && this.classMethodInstanceArrowBlockNotCalled();
     }
-    methodArrowBlockNotCalled = () => {
+    classMethodInstanceArrowBlockNotCalled = () => {
         console.log('Second instance arrow block method will not be used.');
     }    
 
-    methodArrowNoBlockCalled = (doCallSecond) =>
+    classMethodInstanceArrowNoBlockCalled = (doCallSecond) =>
         console.log('First instance arrow no block method will be used.')
             || doCallSecond
-            && this.methodArrowNoBlockNotCalled()
+            && this.classMethodInstanceArrowNoBlockNotCalled()
         ;
-    methodArrowNoBlockNotCalled = () =>
+    classMethodInstanceArrowNoBlockNotCalled = () =>
         console.log('Second instance arrow no block method will not be used.');
 }

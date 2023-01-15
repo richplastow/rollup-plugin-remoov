@@ -8,10 +8,10 @@ function loopsForClassic(zero, one, two) {
 }
 function loopsForIn(fullObj, emptyObj) {
   for (const key in fullObj) {
-    console.log('First for in loop (block) - will be used.', key);
+    console.log('First for in loop (block) - will be used.', key, fullObj[key]);
   }
   for (const key in fullObj) {
-    console.log('Second for in loop (no block) - will also be used.', key);
+    console.log('Second for in loop (no block) - will also be used.', key, fullObj[key]);
   }
 }
 function loopsForOf(fullArr, emptyArr) {
