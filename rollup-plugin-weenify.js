@@ -94,8 +94,35 @@ function transform(source, options, parse, passes) {
                 return;
             }
 
-            // Not a getter or setter which Weenify has created.
-            // Could be a normal function, arrow function, or class method.
+            const ancestor_2 = ancestors[ancestors.length-2];
+            const type_2 = ancestor_2?.type;
+
+            // Deal with a `WEENIFY.spy('...')` call in a ternary conditional.
+            if (type_2 === 'SequenceExpression') {
+
+                // Check that the `WEENIFY.spy('...')` call is the 0th expression Node.
+                const sequence = ancestor_2;
+                if (sequence.expressions[0] !== node) throw Error(
+                    `weenify(): sequence.expressions[0] is ${sequence.expressions[0].type} not node`)
+
+                if (! doRemove) {
+                    // If the block contains code which was run, just delete the
+                    // CallExpression of the `WEENIFY.spy()`. If that leaves only
+                    // one expression (a common situation), get rid of the brackets.
+                    sequence.expressions.shift();
+                    if (sequence.expressions.length === 1)
+                        Object.assign(sequence, sequence.expressions[0]);
+                } else {
+                    // Otherwise the block contains code which was not run.
+                    // Completely deleting the code would be a syntax error, so
+                    // replace the code with a literal zero (just one character).
+                    sequence.type = 'Literal';
+                    sequence.value = '0';
+                    sequence.raw = '0';
+                    delete sequence.expressions; // not actually needed, but oddly satisfying
+                }
+                return;
+            }
 
             // Get a reference to the block Node which contains this
             // `WEENIFY.spy('...')` call.
@@ -196,7 +223,7 @@ function transform(source, options, parse, passes) {
             throw Error(`rollup-plugin-weenify options.passes is ${options.passes}, but still found 'WEENIFY.spy('`);
         }
     } else {
-        console.log(regenerated);
+        // console.log(regenerated);
         return `${regenerated}\n\n// Weenify passes needed: ${options.passes - passes + 1}`;
     }
 }

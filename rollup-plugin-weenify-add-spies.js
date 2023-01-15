@@ -18,29 +18,33 @@ export default function addSpies(options = {}) {
             simpleWalk(ast, {
 
                 ArrowFunctionExpression(node) {
-                    // Create an identifier for this `WEENIFY.spy()` call, unique
-                    // within the current `path`.
-                    currentSpyIndex += 1;
-
-                    // A 'statement' Node must be wrapped in a block, so that
+                    // If `node` is a statement, wrap it in a block, so that
                     // `WEENIFY.spy()` can be inserted at the top of that block.
                     // An arrow function might be:
                     // - ExpressionStatement: (a) => b()
-                    // which must be transformed into:
+                    // which will be transformed into:
                     // - BlockStatement:      (a) => { b() }
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
 
-                    // At this point, `node` must be a BlockStatement.
                     // Insert the `WEENIFY.spy()` call at the top of the block.
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(
+                        node.body.body, // at this point, `node` must be a BlockStatement
+                        pathHash, // allows files to be concatenated without confusion
+                        ++currentSpyIndex, // an identifier unique within the current `pathHash`
+                    );
+                },
+
+                ConditionalExpression(node) { // ternary
+                    if (node.consequent.type !== 'SequenceExpression')
+                        node.consequent = createSequenceExpressionNode(node.consequent);
+                    insertSpyCallIntoSequence(node.consequent.expressions, pathHash, ++currentSpyIndex);
+                    if (node.alternate.type !== 'SequenceExpression')
+                        node.alternate = createSequenceExpressionNode(node.alternate);
+                    insertSpyCallIntoSequence(node.alternate.expressions, pathHash, ++currentSpyIndex);
                 },
 
                 IfStatement(node) {
-                    // Create an identifier for this `WEENIFY.spy()` call, unique
-                    // within the current `path`.
-                    currentSpyIndex += 1;
-
                     // A 'statement' Node must be wrapped in a block, so that
                     // `WEENIFY.spy()` can be inserted at the top of that block.
                     // - BlockStatement:      if (a) { ... }
@@ -52,9 +56,8 @@ export default function addSpies(options = {}) {
                     if (node.consequent.type !== 'BlockStatement')
                         node.consequent = createBlockStatementNode(node.consequent);
 
-                    // At this point, `node.consequent` must be a BlockStatement.
                     // Insert the `WEENIFY.spy()` call at the top of the block.
-                    insertSpyCall(node.consequent.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.consequent.body, pathHash, ++currentSpyIndex);
 
                     // If there is no `else` case, go to the next Node.
                     if (! node.alternate) return;
@@ -66,46 +69,40 @@ export default function addSpies(options = {}) {
                     currentSpyIndex += 1;
                     if (node.alternate.type !== 'BlockStatement')
                         node.alternate = createBlockStatementNode(node.alternate);
-                    insertSpyCall(node.alternate.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.alternate.body, pathHash, currentSpyIndex);
                 },
 
                 ForStatement(node) {
-                    currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.body.body, pathHash, ++currentSpyIndex);
                 },
 
                 ForInStatement(node) {
-                    currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.body.body, pathHash, ++currentSpyIndex);
                 },
 
                 ForOfStatement(node) {
-                    currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.body.body, pathHash, ++currentSpyIndex);
                 },
 
                 FunctionDeclaration(node) {
-                    currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.body.body, pathHash, ++currentSpyIndex);
                 },
 
                 FunctionExpression(node) { // MethodDefinition contains this
-                    currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.body.body, pathHash, ++currentSpyIndex);
                 },
 
                 SwitchStatement(node) {
-                    currentSpyIndex += 1;
                     // if (! Array.isArray(node.cases)) throw Error(
                     //     `addSpies(): SwitchStatement cases is not an array`);
                     for (const caseNode of node.cases) {
@@ -123,15 +120,14 @@ export default function addSpies(options = {}) {
                         } else if (caseNode.consequent[0].type !== 'BlockStatement') {
                             caseNode.consequent[0] = createBlockStatementNode(caseNode.consequent[0]);
                         }
-                        insertSpyCall(caseNode.consequent[0].body, pathHash, currentSpyIndex);
+                        insertSpyCallIntoBlock(caseNode.consequent[0].body, pathHash, ++currentSpyIndex);
                     }
                 },
 
                 WhileStatement(node) {
-                    currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')
                         node.body = createBlockStatementNode(node.body);
-                    insertSpyCall(node.body.body, pathHash, currentSpyIndex);
+                    insertSpyCallIntoBlock(node.body.body, pathHash, ++currentSpyIndex);
                 },
             });
 
@@ -245,15 +241,15 @@ export default function addSpies(options = {}) {
     }
 }
 
-function insertSpyCall(body, pathHash, index, xtra = false) {
-    if (typeof body !== 'object')
-        throw Error(`insertSpyCall(): body is '${typeof body}' not 'object'`);
-    if (! Array.isArray(body))
-        throw Error(`insertSpyCall(): body is '${body.constructor.name}' not an array`);
-    if (typeof body.unshift !== 'function')
-        throw Error('insertSpyCall(): No unshift() on:', console.log(JSON.stringify(body,null,2)));
+function insertSpyCallIntoBlock(block, pathHash, index, xtra = false) {
+    if (typeof block !== 'object')
+        throw Error(`insertSpyCallIntoBlock(): block is '${typeof block}' not 'object'`);
+    if (! Array.isArray(block))
+        throw Error(`insertSpyCallIntoBlock(): block is '${block.constructor.name}' not an array`);
+    if (typeof block.unshift !== 'function')
+        throw Error('insertSpyCallIntoBlock(): No unshift() on:', console.log(JSON.stringify(block,null,2)));
     const id = `${pathHash}-${index}${xtra ? `-${xtra}` : ''}`;
-    body.unshift({
+    block.unshift({
         type: 'ExpressionStatement',
         start: 0,
         end: 0,
@@ -279,12 +275,50 @@ function insertSpyCall(body, pathHash, index, xtra = false) {
     });
 }
 
+function insertSpyCallIntoSequence(expressions, pathHash, index, xtra = false) {
+    if (typeof expressions !== 'object')
+        throw Error(`insertSpyCallIntoSequence(): expressions is '${typeof expressions}' not 'object'`);
+    if (! Array.isArray(expressions))
+        throw Error(`insertSpyCallIntoSequence(): expressions is '${expressions.constructor.name}' not an array`);
+    if (typeof expressions.unshift !== 'function')
+        throw Error('insertSpyCallIntoSequence(): No unshift() on:', console.log(JSON.stringify(expressions,null,2)));
+    const id = `${pathHash}-${index}${xtra ? `-${xtra}` : ''}`;
+    expressions.unshift({
+        type: 'CallExpression',
+        start: 0,
+        end: 0,
+        callee: {
+            type: 'Identifier',
+            start: 0,
+            end: 0,
+            name: 'WEENIFY.spy'
+        },
+        arguments: [{
+            type: 'Literal',
+            start: 0,
+            end: 0,
+            value: id,
+            raw: `'${id}'`,
+        }],
+        optional: false
+    });
+}
+
 function createBlockStatementNode(singleChildNode) {
     return {
         type: 'BlockStatement',
         start: 0,
         end: 0,
         body: [singleChildNode],
+    }
+}
+
+function createSequenceExpressionNode(singleChildNode) {
+    return {
+        type: 'SequenceExpression',
+        start: 0,
+        end: 0,
+        expressions: [singleChildNode],
     }
 }
 
@@ -387,7 +421,7 @@ function insertGetter(properties, pathHash, index, position, key, defaultValue) 
             }
         }
     };
-    insertSpyCall(getter.value.body.body, pathHash, index, 'G');
+    insertSpyCallIntoBlock(getter.value.body.body, pathHash, index, 'G');
     properties.splice(position, 0, getter);
 }
 
@@ -463,7 +497,7 @@ function insertSetter(properties, pathHash, index, position, key) {
             }
         }
     };
-    insertSpyCall(setter.value.body.body, pathHash, index, 'S');
+    insertSpyCallIntoBlock(setter.value.body.body, pathHash, index, 'S');
     properties.splice(position, 0, setter);
 }
 

@@ -22,3 +22,6 @@ functionClassicCalled(doCallSecond);
 objectMethod.objectMethodArrowBlockCalled(doCallSecond);
 objectMethod.objectMethodArrowNoBlockCalled(doCallSecond);
 objectMethod.objectMethodClassicCalled(doCallSecond);
+
+//@TODO anon functions, eg iifes
+//@TODO anon function variables, eg `const noop = function () {}`
