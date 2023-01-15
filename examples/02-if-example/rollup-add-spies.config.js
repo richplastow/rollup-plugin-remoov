@@ -6,13 +6,13 @@
 
 import addSpies from '../../rollup-plugin-weenify-add-spies.js';
 
-const PATH = 'examples/02-elseif-example/';
+const PATH = 'examples/02-if-example/';
 
 export default {
     input: `${PATH}src/02-main.js`,
     output: {
         format: 'es',
-        file: `${PATH}build-with-spies/02-elseif-example.js`,
+        file: `${PATH}build-with-spies/02-if-example.js`,
         plugins: [],
     },
     plugins: [addSpies({
