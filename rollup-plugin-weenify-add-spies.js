@@ -104,6 +104,15 @@ export default function addSpies(options = {}) {
                     insertSpyCall(node.body.body, pathHash, currentSpyIndex);
                 },
 
+                SwitchStatement(node) {
+                    for (const caseNode of node.cases) {
+                        currentSpyIndex += 1;
+                        if (caseNode.consequent[0].type !== 'BlockStatement')
+                        caseNode.consequent[0] = createBlockStatementNode(caseNode.consequent[0]);
+                        insertSpyCall(caseNode.consequent[0].body, pathHash, currentSpyIndex);
+                    }
+                },
+
                 WhileStatement(node) {
                     currentSpyIndex += 1;
                     if (node.body.type !== 'BlockStatement')

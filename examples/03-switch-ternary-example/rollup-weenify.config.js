@@ -4,21 +4,17 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        '5wfsj7': [ 0,1,0,0 ],
-        'lskjtx': [ 0,1,0,0 ],
-        'osglam': [ 1,0,0 ],
-        'hcrhqe': [ 1,0,0 ],
-        'cvjz65': [ 0,1,0,0 ]
+        't5mm7v': [ 0,1,1,0,0,0,0 ]
     },
 };
 
-const PATH = 'examples/03-if-misc-example/';
+const PATH = 'examples/03-switch-ternary-example/';
 
 export default {
-    input: `${PATH}build-with-spies/03-if-misc-example.js`,
+    input: `${PATH}build-with-spies/03-switch-ternary-example.js`,
     output: {
         format: 'es',
-        file: `${PATH}build/03-if-misc-example.js`,
+        file: `${PATH}build/03-switch-ternary-example.js`,
         plugins: [],
     },
     plugins: [
