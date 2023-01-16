@@ -217,14 +217,14 @@ export default function addSpies(options = {}) {
                     `W.spyCalls['${pathHash}'] = new Set();`,
                     ! options.callScan ? '' :
                         "if (! W.willScan) { " +
-                        `setTimeout(W.scan, ${options.callScan}); W.willScan = true }\n` +
+                        `setTimeout(W.scan, ${options.callScan}); W.willScan = true }`,
                     "}(); // end iife // END_WEENIFY_BOILERPLATE",
                     "",
                     regenerated,
                 ].join('\n');
             }
 
-            // console.log(regenerated);
+            console.log(regenerated);
             return regenerated;
         }
     }
