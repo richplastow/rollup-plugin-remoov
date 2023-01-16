@@ -34,6 +34,12 @@ function transform(source, options, parse, passes) {
     const ast = parse(src);
     // console.log(JSON.stringify(ast,null,2));
 
+    // Decode options.spyResults.
+    const decodedSpyResults = {};
+    for (const pathHash in options.spyResults) {
+        decodedSpyResults[pathHash] = toBinaryArray(options.spyResults[pathHash]);
+    }
+
     // Find all `WEENIFY.spy('...')` calls.
     ancestorWalk(ast, {
         CallExpression(node, ancestors) {
@@ -44,7 +50,7 @@ function transform(source, options, parse, passes) {
             // Look up the spy index in `options.spies`, and determine
             // whether to clear the entire block or not.
             const [ pathHash, spyIndex, xtra ] = node.arguments[0].value.split('-');
-            const doRemove = xtra === 'S' || options.spyResults[pathHash][spyIndex];
+            const doRemove = xtra === 'S' || decodedSpyResults[pathHash][spyIndex];
 
             // Deal with a getter or setter which Weenify has created.
             if (xtra === 'G' || xtra === 'S') {
@@ -237,4 +243,14 @@ function isWeenifySpyCall(node) {
      && node.callee.object.name === 'WEENIFY'
      && node.callee.property.name === 'spy'
     );
+}
+
+function toBinaryArray(encoded) {
+    let out = [], lut = {};
+    lut.add = function (from, to, shift) { for (let i=from; i<=to; i++)
+        this[String.fromCharCode(i)] = i - shift; return this }
+    lut.add(48,57,48).add(65,90,55).add(94,95,58).add(97,122,59);
+    for (const char of encoded.split(''))
+        for (let i=0; i<6; i++) out.push(+!!(lut[char] & (1 << i)));
+    return out
 }

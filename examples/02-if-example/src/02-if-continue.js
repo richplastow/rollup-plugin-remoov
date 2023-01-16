@@ -2,7 +2,7 @@ export default function ifContinue(redBlue) {
     let doLoop = true;
     while (doLoop) {
         if (redBlue === 'RED') {
-            console.log('02-if-continue: IfStatement consequent block - will be used.');
+            console.log('2 of 8: 02-if-continue: IfStatement consequent block - will be used.');
             doLoop = false;
             continue;
         } else {

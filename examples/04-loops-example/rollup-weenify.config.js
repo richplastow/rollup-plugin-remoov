@@ -4,11 +4,11 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        '8tdzor': [ 0,0,1,1,0 ],
-        '4s0u2m': [ 0,0,1,1,0 ],
-        '4ov6eo': [ 0,0,1,1,0 ],
-        'clx9pq': [ 0,0,1,1,0 ],
-        'yzze0g': [ 0,0 ]
+        '8tdzor': 'C',
+        '4s0u2m': 'C',
+        '4ov6eo': 'C',
+        'clx9pq': 'C',
+        'yzze0g': '0'
     },
 };
 

@@ -1,68 +1,52 @@
 class ClassMethodInstance {
-  classMethodInstanceClassicCalled(doCallSecond) {
-    console.log('First instance classic method will be used.');
-    return doCallSecond && this.classMethodInstanceClassicNotCalled();
-  }
-  classMethodInstanceArrowBlockCalled = doCallSecond => {
-    console.log('First instance arrow block method will be used.');
-    return doCallSecond && this.classMethodInstanceArrowBlockNotCalled();
+  classMethodInstanceArrowBlockNotCalled = () => {
+    console.log('05-class-method-instance: Second instance arrow block method will not be used.');
   };
   classMethodInstanceArrowNoBlockCalled = doCallSecond => {
-    console.log('First instance arrow no block method will be used.') || doCallSecond && this.classMethodInstanceArrowNoBlockNotCalled();
+    console.log('3 of 12: 05-class-method-instance: First instance arrow no block method will be used.') || doCallSecond && this.classMethodInstanceArrowNoBlockNotCalled();
   };
 }
-class ClassMethodStatic {
-  static classMethodStaticClassicCalled(doCallSecond) {
-    console.log('First static classic method will be used.');
-    return doCallSecond && ClassMethodStatic.classMethodStaticClassicNotCalled();
-  }
-}
-ClassMethodStatic.classMethodStaticArrowBlockCalled = doCallSecond => {
-  console.log('First static arrow block method will be used.');
-  return doCallSecond && ClassMethodStatic.classMethodStaticArrowBlockNotCalled();
+class ClassMethodStatic {}
+ClassMethodStatic.classMethodStaticArrowBlockNotCalled = () => {
+  console.log('05-class-method-static: Second static arrow block method will not be used.');
 };
 ClassMethodStatic.classMethodStaticArrowNoBlockCalled = doCallSecond => {
-  console.log('First static arrow no block method will be used.') || doCallSecond && ClassMethodStatic.classMethodStaticArrowNoBlockNotCalled();
+  console.log('6 of 12: 05-class-method-static: First static arrow no block method will be used.') || doCallSecond && ClassMethodStatic.classMethodStaticArrowNoBlockNotCalled();
 };
 const functionArrowBlockCalled = doCallSecond => {
-  console.log('First arrow block function will be used.');
+  console.log('7 of 12: 05-function-arrow: First arrow block function will be used.');
   return doCallSecond && functionArrowBlockNotCalled();
 };
 const functionArrowNoBlockCalled = doCallSecond => {
-  console.log('First arrow no-block function will be used.') || doCallSecond && functionArrowNoBlockNotCalled();
+  console.log('8 of 12: 05-function-arrow: First arrow no-block function will be used.') || doCallSecond && functionArrowNoBlockNotCalled();
 };
 function functionClassicCalled(doCallSecond) {
-  console.log('First classic function will be used.');
+  console.log('9 of 12: 05-function-classic: First classic function will be used.');
   return doCallSecond && functionClassicNotCalled();
 }
 function functionClassicNotCalled() {}
 const objectMethod = {
-  objectMethodClassicCalled(doCallSecond) {
-    console.log('First instance classic object method will be used.');
-    return doCallSecond && objectMethod.objectMethodClassicNotCalled();
-  },
-  objectMethodArrowBlockCalled: doCallSecond => {
-    console.log('First instance arrow block object method will be used.');
-    return doCallSecond && objectMethod.objectMethodArrowBlockNotCalled();
+  objectMethodArrowBlockNotCalled: () => {
+    console.log('05-object-method: Second instance arrow block object method will not be used.');
   },
   objectMethodArrowNoBlockCalled: doCallSecond => {
-    console.log('First instance arrow no block object method will be used.') || doCallSecond && objectMethod.objectMethodArrowNoBlockNotCalled();
+    console.log('12 of 12: 05-object-method: First instance arrow no block object method will be used.') || doCallSecond && objectMethod.objectMethodArrowNoBlockNotCalled();
   }
 };
 const doCallSecond = false;
 const instance = new ClassMethodInstance();
+instance.classMethodInstanceClassicCalled(doCallSecond);
 instance.classMethodInstanceArrowBlockCalled(doCallSecond);
 instance.classMethodInstanceArrowNoBlockCalled(doCallSecond);
-instance.classMethodInstanceClassicCalled(doCallSecond);
+ClassMethodStatic.classMethodStaticClassicCalled(doCallSecond);
 ClassMethodStatic.classMethodStaticArrowBlockCalled(doCallSecond);
 ClassMethodStatic.classMethodStaticArrowNoBlockCalled(doCallSecond);
-ClassMethodStatic.classMethodStaticClassicCalled(doCallSecond);
 functionArrowBlockCalled(doCallSecond);
 functionArrowNoBlockCalled(doCallSecond);
 functionClassicCalled(doCallSecond);
+objectMethod.objectMethodClassicCalled(doCallSecond);
 objectMethod.objectMethodArrowBlockCalled(doCallSecond);
 objectMethod.objectMethodArrowNoBlockCalled(doCallSecond);
-objectMethod.objectMethodClassicCalled(doCallSecond);
 
 
-// Weenify passes needed: 2
+// Weenify passes needed: 3

@@ -4,8 +4,8 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        '4lvt61': [ 0,0,1 ],
-        'crddw8': [ 0,0,0,0,0,1 ]
+        '4lvt61': '4',
+        'crddw8': '02'
     },
 };
 

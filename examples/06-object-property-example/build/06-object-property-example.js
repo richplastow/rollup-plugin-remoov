@@ -30,4 +30,4 @@ propertyGetAndSet.already = true;
 console.log('propertySet.already now:', propertyGetAndSet.already);
 
 
-// Weenify passes needed: 3
+// Weenify passes needed: 4

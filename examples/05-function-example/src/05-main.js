@@ -10,18 +10,18 @@ import objectMethod from './05-object-method.js';
 const doCallSecond = false;
 
 const instance = new ClassMethodInstance();
+instance.classMethodInstanceClassicCalled(doCallSecond);
 instance.classMethodInstanceArrowBlockCalled(doCallSecond);
 instance.classMethodInstanceArrowNoBlockCalled(doCallSecond);
-instance.classMethodInstanceClassicCalled(doCallSecond);
+ClassMethodStatic.classMethodStaticClassicCalled(doCallSecond);
 ClassMethodStatic.classMethodStaticArrowBlockCalled(doCallSecond);
 ClassMethodStatic.classMethodStaticArrowNoBlockCalled(doCallSecond);
-ClassMethodStatic.classMethodStaticClassicCalled(doCallSecond);
 functionArrowBlockCalled(doCallSecond);
 functionArrowNoBlockCalled(doCallSecond);
 functionClassicCalled(doCallSecond);
+objectMethod.objectMethodClassicCalled(doCallSecond);
 objectMethod.objectMethodArrowBlockCalled(doCallSecond);
 objectMethod.objectMethodArrowNoBlockCalled(doCallSecond);
-objectMethod.objectMethodClassicCalled(doCallSecond);
 
 //@TODO anon functions, eg iifes
 //@TODO anon function variables, eg `const noop = function () {}`

@@ -4,13 +4,13 @@ import weenify from '../../rollup-plugin-weenify.js';
 
 const weenifyOptions = {
     spyResults: {
-        'pwcwmq': [ 0,1,0,0 ],
-        'vslhq2': [ 0,1,0,0 ],
-        'xp46qw': [ 1,1,0,0,1,0,1,0 ],
-        'rqlsfe': [ 0,1,0,0 ],
-        '5fymjz': [ 1,0,0 ],
-        '2n5md5': [ 1,0,0 ],
-        'b7p544': [ 0 ]
+        'pwcwmq': '2',
+        'vslhq2': '2',
+        'xp46qw': 'J1',
+        'rqlsfe': '2',
+        '5fymjz': '1',
+        '2n5md5': '1',
+        'b7p544': '0'
     },
 };
 

@@ -1,32 +1,32 @@
 function loopsForClassic(zero, one, two) {
   for (let i = zero; i < two; i++) {
-    console.log('First classic for loop (block) - will be used.');
+    console.log('1 of 7: 04-loops-for-classic: First classic for loop (block) - will be used.');
   }
   for (let i = zero; i < two; i++) {
-    console.log('Second classic for loop (no block) - will also be used.');
+    console.log('2 of 7: 04-loops-for-classic: Second classic for loop (no block) - will also be used.');
   }
 }
 function loopsForIn(fullObj, emptyObj) {
   for (const key in fullObj) {
-    console.log('First for in loop (block) - will be used.', key, fullObj[key]);
+    console.log('3 of 7: 04-loops-for-in: First for in loop (block) - will be used.', key, fullObj[key]);
   }
   for (const key in fullObj) {
-    console.log('Second for in loop (no block) - will also be used.', key, fullObj[key]);
+    console.log('4 of 7: 04-loops-for-in: Second for in loop (no block) - will also be used.', key, fullObj[key]);
   }
 }
 function loopsForOf(fullArr, emptyArr) {
   for (const val of fullArr) {
-    console.log('First for of loop (block) - will be used.', val);
+    console.log('5 of 7: 04-loops-for-of: First for of loop (block) - will be used.', val);
   }
   for (const val of fullArr) {
-    console.log('Second for of loop (no block) - will also be used.', val);
+    console.log('6 of 7: 04-loops-for-of: Second for of loop (no block) - will also be used.', val);
   }
   for (const val of emptyArr) {}
   for (const val of emptyArr) {}
 }
 function loopsWhile(a, b) {
   while (a) {
-    console.log('First and second while loops will both be used.');
+    console.log('7 of 7: 04-loops-while: First and second while loops will both be used.');
     break;
   }
 }
