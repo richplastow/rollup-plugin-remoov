@@ -224,7 +224,7 @@ export default function addSpies(options = {}) {
                 ].join('\n');
             }
 
-            console.log(regenerated);
+            // console.log(regenerated);
             return regenerated;
         }
     }
